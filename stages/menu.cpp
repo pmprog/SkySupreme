@@ -138,7 +138,7 @@ void MenuStage::Render()
 		al_draw_bitmap( titleImg, (Framework::SystemFramework->GetDisplayWidth() / 2) - (al_get_bitmap_width( titleImg ) / 2), 8, 0 );
 	}
 
-	ALLEGRO_FONT* menuFont = Framework::SystemFramework->GetFontManager()->GetFont( "resource/falsepos.ttf", 14 * tileMultiplier, 0 );
+	ALLEGRO_FONT* menuFont = Framework::SystemFramework->GetFontManager()->GetFont( "resource/falsepos.ttf", Framework::SystemFramework->GetDisplayHeight() / 12, 0 );
 	ALLEGRO_COLOR menuSelected = OptionGlow[OptionGlowIndex];
 	ALLEGRO_COLOR menuNormal = al_map_rgb( 0, 0, 0 );
 	int Ypos = Framework::SystemFramework->GetDisplayHeight() - (al_get_font_line_height( menuFont ) * 5);

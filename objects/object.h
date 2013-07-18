@@ -10,7 +10,7 @@ class GameStage;
 
 class GameObject
 {
-	private:
+	protected:
 		int Animation_Delay;
 
 	public:

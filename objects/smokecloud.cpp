@@ -4,7 +4,7 @@
 
 SmokeCloud::SmokeCloud( Vector2* StartPosition, double StartVelocity, double StartAngle ) : Particle( FRAMES_PER_SECOND, StartPosition, StartVelocity, StartAngle )
 {
-	Animation_TicksPerFrame = FRAMES_PER_SECOND / 8;
+	Animation_TicksPerFrame = FRAMES_PER_SECOND / 9;
 }
 
 void SmokeCloud::Update()
@@ -36,17 +36,21 @@ void SmokeCloud::Render()
 			break;
 		case 1:
 		case 2:
-			tileX = 32 * Game->graphicsMultiplier;
+			tileX = 16 * Game->graphicsMultiplier;
 			break;
 		case 3:
 		case 4:
 		case 5:
-			tileX = 64 * Game->graphicsMultiplier;
+			tileX = 32 * Game->graphicsMultiplier;
+			break;
+		case 6:
+		case 7:
+			tileX = 48 * Game->graphicsMultiplier;
 			break;
 		default:
 			ForRemoval = true;
 			break;
 	}
-	al_draw_bitmap_region( tileset, tileX, tileY, 32 * Game->graphicsMultiplier, 32 * Game->graphicsMultiplier, (Position->X - 16) * Game->graphicsMultiplier, (Position->Y - 16) * Game->graphicsMultiplier, 0 );
+	al_draw_bitmap_region( tileset, tileX, tileY, 16 * Game->graphicsMultiplier, 16 * Game->graphicsMultiplier, (Position->X - 8) * Game->graphicsMultiplier, (Position->Y - 8) * Game->graphicsMultiplier, 0 );
 	
 }
