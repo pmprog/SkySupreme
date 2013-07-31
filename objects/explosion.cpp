@@ -1,5 +1,5 @@
 
-#include "smokecloud.h"
+#include "explosion.h"
 #include "../stages/game.h"
 
 Explosion::Explosion( Vector2* StartPosition ) : Particle( FRAMES_PER_SECOND / 2, StartPosition, 0.0, 0.0 )
