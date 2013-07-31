@@ -40,6 +40,7 @@ Framework::Framework()
 
 	al_register_event_source( eventQueue, al_get_keyboard_event_source() );
 	al_register_event_source( eventQueue, al_get_mouse_event_source() );
+	al_register_event_source( eventQueue, al_get_joystick_event_source() );
 
 	fpsTimer = al_create_timer( 1.0 / (float)FRAMES_PER_SECOND );
 	al_register_event_source( eventQueue, al_get_timer_event_source( fpsTimer ) );

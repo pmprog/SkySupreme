@@ -12,18 +12,25 @@ void Bullet::Update()
 	Particle::Update();
 	Animation_CurrentFrame = Animation_CurrentFrame % 2;
 
-
-/*
-	for( std::vector<GameObject*>::iterator ptr = Objects.begin(); ptr != Objects.end(); ptr++ )
+	std::list<Plane*> *curPlanes = Game->GetPlaneObjects();
+	for( std::list<Plane*>::iterator ptr = curPlanes->begin(); ptr != curPlanes->end(); ptr++ )
 	{
 		GameObject* gObj = (GameObject*)(*ptr);
-		Plane* pObj = dynamic_cast<Plane*>(gObj);
-		if( pObj != 0 )
+		Plane* pObj = (Plane*)(*ptr);
+		if( pObj != Owner )
 		{
-			pObj->Event( e );
+			if( pObj->State == STATE_FLYING || pObj->State == STATE_STALLED || pObj->State == STATE_SHOOT )
+			{
+				 if( Position->DistanceTo( pObj->Position ) < 24.0 )
+				 {
+					 pObj->SetState( STATE_HIT );
+					 pObj->LastHitBy = (Plane*)Owner;
+					 ForRemoval = true;
+					 break;
+				 }
+			}
 		}
 	}
-*/
 }
 
 void Bullet::Render()

@@ -3,11 +3,15 @@
 #include "../stages/game.h"
 #include "bullet.h"
 #include "smokecloud.h"
+#include "explosion.h"
 
 Plane::Plane( ALLEGRO_JOYSTICK* Controller, Vector2* StartPosition, double StartVelocity, double StartAngle ) : GameObject( StartPosition )
 {
 	Velocity = StartVelocity;
 	Angle = StartAngle;
+
+	Score = 0;
+	LastHitBy = 0;
 
 	LastSmokeFrame = 0;
 	Team = 0;
@@ -21,18 +25,26 @@ Plane::Plane( ALLEGRO_JOYSTICK* Controller, Vector2* StartPosition, double Start
 	Controller_Assistance_AutoFlip = false;
 	Controller_Assistance_AutoFire = false;
 	Controller_Assistance_AutoFly = false;
+	Controller_Assistance_NoStall = false;
 
 	if( Controller == 0 )
 	{
 		Controller_Keyboard = true;
 		Controller_Joystick = 0;
-	} else if( Controller < 0 ) {
+	} else if( (int)Controller == -1 ) {
+		Controller_Keyboard = false;
+		Controller_Joystick = 0;
 		Controller_Assistance_AutoFlip = true;
 		Controller_Assistance_AutoFire = true;
 		Controller_Assistance_AutoFly = true;
 	} else {
 		Controller_Keyboard = false;
 		Controller_Joystick = Controller;
+		if( al_get_joystick_num_buttons( Controller ) < 2 )
+		{
+			// Not enough buttons, so auto-flip
+			Controller_Assistance_AutoFlip = true;
+		}
 	}
 }
 
@@ -55,10 +67,18 @@ void Plane::Event( FwEvent* e )
 				case ALLEGRO_KEY_RIGHT:
 					RotateRight = true;
 					break;
+#ifdef PANDORA
+				case ALLEGRO_KEY_PGDN:
+				case ALLEGRO_KEY_HOME:
+#endif
 				case ALLEGRO_KEY_Z:
 					HasShot = false;
 					SetState( STATE_SHOOT );
 					break;
+#ifdef PANDORA
+				case ALLEGRO_KEY_END:
+				case ALLEGRO_KEY_PGUP:
+#endif
 				case ALLEGRO_KEY_X:
 					if( State != STATE_SHOOT )
 					{
@@ -89,6 +109,11 @@ void Plane::Event( FwEvent* e )
 		switch( e->Type )
 		{
 			case EVENT_JOYSTICK_AXIS:
+				if( e->Data.Joystick.axis == 0 )
+				{
+					RotateLeft = (e->Data.Joystick.pos < 0.0);
+					RotateRight = (e->Data.Joystick.pos > 0.0);
+				}
 				break;
 			case EVENT_JOYSTICK_BUTTON_DOWN:
 				switch( e->Data.Joystick.button )
@@ -143,9 +168,14 @@ void Plane::Update()
 	}
 
 	// People hiding offscreen
-	if( Position->Y < 0.0 )
+	if( Position->Y < 0.0 && Game->Rules_HasGround )
 	{
-		Velocity -= 0.03;
+		SetState( STATE_STALLED );
+	}
+
+	if( Controller_Assistance_NoStall && Velocity < 1.0 )
+	{
+		Velocity = 1.0;
 	}
 
 	if( Velocity <= 0.0 )
@@ -177,9 +207,10 @@ void Plane::Update()
 
 	if( State == STATE_FLIPPING )
 	{
-		if( Animation_CurrentFrame == 6 )
+		if( Animation_CurrentFrame == 2 )
 		{
 			Flipped = !Flipped;
+		} else if( Animation_CurrentFrame == 4 ) {
 			SetState( STATE_FLYING );
 		}
 	}
@@ -214,8 +245,20 @@ void Plane::Update()
 		Velocity = PLANE_VELOCITY_MAX;
 	}
 
-	if( (Health <= PLANE_DAMAGE_SMOKE_LOTS && Animation_Delay % (Animation_TicksPerFrame / 2) == 0) || (Health <= PLANE_DAMAGE_SMOKE_SMALL && Animation_Delay == 0) )
+	if( State == STATE_EXPLODING )
 	{
+		Vector2* v = new Vector2( (float)(rand() % 8), 0.0 );
+		v->RotateVector( (float)(rand() % 36000) / 100.0 );
+		v->Add( Position );
+		Game->AddGameObject( new Explosion( v ) );
+
+		if( Animation_CurrentFrame >= 2 )
+		{
+			SetState( STATE_EXPLODED );
+		}
+	} else if( State == STATE_EXPLODED ) {
+		// ForRemoval = true;
+	} else if( (Health <= PLANE_DAMAGE_SMOKE_LOTS && Animation_Delay % (Animation_TicksPerFrame / 2) == 0) || (Health <= PLANE_DAMAGE_SMOKE_SMALL && Animation_Delay == 0) ) {
 		Game->AddGameObject( new SmokeCloud( Position, 0.8, Angle + 180.0 ) );
 	}
 
@@ -223,7 +266,7 @@ void Plane::Update()
 
 void Plane::Render()
 {
-	if( ForRemoval )
+	if( ForRemoval || State == STATE_EXPLODING || State == STATE_EXPLODED )
 	{
 		return;
 	}
@@ -254,6 +297,17 @@ void Plane::SetState( int NewState )
 		} else {
 			// Just handle the hit, but let everything else continue
 			NewState = State;
+			Game->AddGameObject( new SmokeCloud( Position, 0.8, Angle + 180.0 ) );
+		}
+	}
+	if( NewState == STATE_EXPLODING )
+	{
+		Velocity = 0.0;
+		if( LastHitBy != 0 )
+		{
+			LastHitBy->Score++;
+		} else {
+			Score--;
 		}
 	}
 	State = NewState;

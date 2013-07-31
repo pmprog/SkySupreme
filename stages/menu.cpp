@@ -4,25 +4,51 @@
 
 MenuStage::MenuStage()
 {
-	OptionSelected = 0;
+	OptionSelected = 1;
 	OptionGlowIndex = 0;
 	OptionGlowDelay = 0;
 
-	//OptionGlow[0] = al_map_rgb( 160, 200, 120 );
-	//OptionGlow[1] = al_map_rgb( 180, 220, 140 );
-	//OptionGlow[2] = al_map_rgb( 200, 240, 160 );
-	//OptionGlow[3] = al_map_rgb( 220, 255, 180 );
-	OptionGlow[0] = al_map_rgb( 60, 100, 20 );
-	OptionGlow[1] = al_map_rgb( 80, 120, 40 );
-	OptionGlow[2] = al_map_rgb( 100, 140, 60 );
-	OptionGlow[3] = al_map_rgb( 120, 160, 80 );
+	WasJoyUp = false;
+	WasJoyDown = false;
+
+	OptionGlow[0] = al_map_rgb( 10, 10, 255 );
+	OptionGlow[1] = al_map_rgb( 30, 30, 255 );
+	OptionGlow[2] = al_map_rgb( 50, 50, 255 );
+	OptionGlow[3] = al_map_rgb( 70, 70, 255 );
 	OptionGlow[4] = OptionGlow[2];
 	OptionGlow[5] = OptionGlow[1];
 
+	tileMultiplier = Framework::SystemFramework->Settings->GetQuickIntegerValue( "Visual.GraphicScale" );
+	switch( tileMultiplier )
+	{
+		case 2:
+			tileSet = Framework::SystemFramework->GetImageManager()->GetScale2xImage( "resource/tileset.png" );
+			break;
+		case 3:
+			tileSet = Framework::SystemFramework->GetImageManager()->GetScale3xImage( "resource/tileset.png" );
+			break;
+		case 4:
+			tileSet = Framework::SystemFramework->GetImageManager()->GetScale4xImage( "resource/tileset.png" );
+			break;
+		default:
+			tileSet = Framework::SystemFramework->GetImageManager()->GetImage( "resource/tileset.png" );
+			tileMultiplier = 1;
+			break;
+	}
+
+	for( int i = 0; i < MENU_CLOUD_COUNT; i++ )
+	{
+		Cloud* c = new Cloud(new Vector2( rand() % Framework::SystemFramework->GetDisplayWidth(), rand() % Framework::SystemFramework->GetDisplayHeight() ), (float)(rand() % 80) / 10, 180.0 );
+		c->SetTileSetImage( tileSet, tileMultiplier );
+		BackgroundClouds.push_back( c );
+	}
+
+	Framework::SystemFramework->PlayMusic( "resource/506187_dogfight.ogg", ALLEGRO_PLAYMODE_LOOP );
 }
 
 void MenuStage::Begin()
 {
+	GameObject::Game = 0;
 }
 
 void MenuStage::Pause()
@@ -31,10 +57,12 @@ void MenuStage::Pause()
 
 void MenuStage::Resume()
 {
+	GameObject::Game = 0;
 }
 
 void MenuStage::Finish()
 {
+	Framework::SystemFramework->StopMusic();
 }
 
 void MenuStage::Event(FwEvent *e)
@@ -55,13 +83,21 @@ void MenuStage::Event(FwEvent *e)
 					}
 					break;
 				case ALLEGRO_KEY_DOWN:
-					if( OptionSelected < 3 )
+					if( OptionSelected < 5 )
 					{
 						OptionSelected++;
 					}
 					break;
+#ifdef PANDORA
+				case ALLEGRO_KEY_PGUP:
+				case ALLEGRO_KEY_PGDN:
+				case ALLEGRO_KEY_HOME:
+				case ALLEGRO_KEY_END:
+#endif
 				case ALLEGRO_KEY_SPACE:
 				case ALLEGRO_KEY_ENTER:
+				case ALLEGRO_KEY_Z:
+				case ALLEGRO_KEY_X:
 					ProcessMenuOption();
 					break;
 			}
@@ -70,19 +106,27 @@ void MenuStage::Event(FwEvent *e)
 		case EVENT_JOYSTICK_AXIS:
 			if( e->Data.Joystick.id == al_get_joystick( 0 ) )
 			{
-				if( e->Data.Joystick.stick == 0 && e->Data.Joystick.axis == 0 )
+				if( e->Data.Joystick.axis == 1 )
 				{
 					if( e->Data.Joystick.pos < 0.0 )
 					{
-						if( OptionSelected > 0 )
+						if( !WasJoyUp && OptionSelected > 0 )
 						{
 							OptionSelected--;
+							WasJoyUp = true;
 						}
-					} else if( e->Data.Joystick.pos > 0.0 ) {
-						if( OptionSelected < 3 )
+					} else {
+						WasJoyUp = false;
+					}
+					if( e->Data.Joystick.pos > 0.0 )
+					{
+						if( !WasJoyDown && OptionSelected < 5 )
 						{
 							OptionSelected++;
+							WasJoyDown = true;
 						}
+					} else {
+						WasJoyDown = false;
 					}
 				}
 			}
@@ -98,37 +142,29 @@ void MenuStage::Event(FwEvent *e)
 
 void MenuStage::Update()
 {
-	OptionGlowDelay = (OptionGlowDelay + 1) % 10;
+	OptionGlowDelay = (OptionGlowDelay + 1) % 12;
 	if( OptionGlowDelay == 0 )
 	{
 		OptionGlowIndex = (OptionGlowIndex + 1) % 6;
+	}
+	for( std::list<Cloud*>::iterator c = BackgroundClouds.begin(); c != BackgroundClouds.end(); c++ )
+	{
+		((Cloud*)*c)->Update();
 	}
 }
 
 void MenuStage::Render()
 {
-	ALLEGRO_BITMAP* tileSet;
+	
 	ALLEGRO_BITMAP* titleImg = Framework::SystemFramework->GetImageManager()->GetImage( "resource/title.png" );
-	int tileMultiplier = Framework::SystemFramework->Settings->GetQuickIntegerValue( "Visual.GraphicScale" );
 
-	switch( tileMultiplier )
-	{
-		case 2:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetScale2xImage( "resource/tileset.png" );
-			break;
-		case 3:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetScale3xImage( "resource/tileset.png" );
-			break;
-		case 4:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetScale4xImage( "resource/tileset.png" );
-			break;
-		default:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetImage( "resource/tileset.png" );
-			tileMultiplier = 1;
-			break;
-	}
 
 	al_clear_to_color( al_map_rgb( 92, 220, 218 ) ); // al_map_rgb( 43, 169, 168 ) );
+
+	for( std::list<Cloud*>::iterator c = BackgroundClouds.begin(); c != BackgroundClouds.end(); c++ )
+	{
+		((Cloud*)*c)->Render();
+	}
 
 	if( al_get_bitmap_width( titleImg ) > Framework::SystemFramework->GetDisplayWidth() )
 	{
@@ -141,17 +177,20 @@ void MenuStage::Render()
 	ALLEGRO_FONT* menuFont = Framework::SystemFramework->GetFontManager()->GetFont( "resource/falsepos.ttf", Framework::SystemFramework->GetDisplayHeight() / 12, 0 );
 	ALLEGRO_COLOR menuSelected = OptionGlow[OptionGlowIndex];
 	ALLEGRO_COLOR menuNormal = al_map_rgb( 0, 0, 0 );
-	int Ypos = Framework::SystemFramework->GetDisplayHeight() - (al_get_font_line_height( menuFont ) * 5);
+	int Lsiz = al_get_font_line_height( menuFont );
+	int Ypos = Framework::SystemFramework->GetDisplayHeight() - (al_get_font_line_height( menuFont ) * 7);
 
-	al_draw_text( menuFont, ( OptionSelected == 0 ? menuSelected : menuNormal ), 20, Ypos, 0, "Single Player" );
-	Ypos += al_get_font_line_height( menuFont );
-	al_draw_text( menuFont, ( OptionSelected == 1 ? menuSelected : menuNormal ), 20, Ypos, 0, "Local Multiplayer" );
-	Ypos += al_get_font_line_height( menuFont );
-	al_draw_text( menuFont, ( OptionSelected == 2 ? menuSelected : menuNormal ), 20, Ypos, 0, "Settings" );
-	Ypos += al_get_font_line_height( menuFont );
-	al_draw_text( menuFont, ( OptionSelected == 3 ? menuSelected : menuNormal ), 20, Ypos, 0, "Quit" );
-
-
+	al_draw_text( menuFont, ( OptionSelected == 0 ? menuSelected : menuNormal ), 20, Ypos, 0, "Free Flight" );
+	Ypos += Lsiz;
+	al_draw_text( menuFont, ( OptionSelected == 1 ? menuSelected : menuNormal ), 20, Ypos, 0, "Survival (Single Player)" );
+	Ypos += Lsiz;
+	al_draw_text( menuFont, ( OptionSelected == 2 ? menuSelected : menuNormal ), 20, Ypos, 0, "Local Mutliplayer" );
+	Ypos += Lsiz;
+	al_draw_text( menuFont, ( OptionSelected == 3 ? menuSelected : menuNormal ), 20, Ypos, 0, "Network Multiplayer" );
+	Ypos += Lsiz;
+	al_draw_text( menuFont, ( OptionSelected == 4 ? menuSelected : menuNormal ), 20, Ypos, 0, "Settings" );
+	Ypos += Lsiz;
+	al_draw_text( menuFont, ( OptionSelected == 5 ? menuSelected : menuNormal ), 20, Ypos, 0, "Quit" );
 }
 
 void MenuStage::ProcessMenuOption()
@@ -159,13 +198,20 @@ void MenuStage::ProcessMenuOption()
 	switch( OptionSelected )
 	{
 		case 0:
-			Framework::SystemFramework->ProgramStages->Push( new GameStage() );
+			Framework::SystemFramework->ProgramStages->Push( new GameStage( GAMEMODE_FREEFLIGHT ) );
 			break;
 		case 1:
+			Framework::SystemFramework->ProgramStages->Push( new GameStage( GAMEMODE_SURVIVAL ) );
 			break;
 		case 2:
+			//Framework::SystemFramework->ProgramStages->Push( new GameStage( GAMEMODE_LASTMANSTANDING ) );
 			break;
 		case 3:
+			//Framework::SystemFramework->ProgramStages->Push( new GameStage( GAMEMODE_TEAMBATTLES ) );
+			break;
+		case 4:
+			break;
+		case 5:
 			delete Framework::SystemFramework->ProgramStages->Pop();
 			break;
 	}

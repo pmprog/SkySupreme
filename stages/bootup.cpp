@@ -5,6 +5,7 @@
 
 void BootUp::Begin()
 {
+	GameObject::Game = 0;
 	Framework::SystemFramework->SetWindowTitle( new std::string("Sky Supreme") );
 	InitialiseSettings(); // Configure defaults
 	Framework::SystemFramework->SaveSettings();

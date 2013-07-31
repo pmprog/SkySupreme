@@ -1,26 +1,38 @@
 
 #include "game.h"
+#include "survivalcontrollerselect.h"
+#include "multicontrollerselect.h"
+#include "freeflightcontrollerselect.h"
 
-GameStage::GameStage()
+GameStage::GameStage( int Mode )
 {
 	graphicsMultiplier = Framework::SystemFramework->Settings->GetQuickIntegerValue( "Visual.GraphicScale" );
-	Plane* ply = new Plane( 0, new Vector2( 20, 20 ), PLANE_VELOCITY_MAX * 0.7, 0.0 );
-	AddGameObject( ply );
 
-	ply = new Plane( (ALLEGRO_JOYSTICK*)-1, new Vector2( 20, 220 ), PLANE_VELOCITY_MAX * 0.7, 0.0 );
-	ply->Team = 3;
-	AddGameObject( ply );
-
-
+	Rules_GameMode = Mode;
 	Rules_PlaneToPlaneCollisions = false;
 	Rules_BulletToBulletCollisions = false;
 	Rules_FriendlyFire = false;
 	Rules_HasGround = true;
+
 }
 
 void GameStage::Begin()
 {
 	GameObject::Game = this;
+
+	switch( Rules_GameMode )
+	{
+		case GAMEMODE_SURVIVAL:
+			Framework::SystemFramework->ProgramStages->Push( (Stage*)new SurvivalControllerSelectStage() );
+			break;
+		case GAMEMODE_FREEFLIGHT:
+			Framework::SystemFramework->ProgramStages->Push( (Stage*)new FreeFlightControllerSelectStage() );
+			break;
+		case GAMEMODE_LASTMANSTANDING:
+		case GAMEMODE_TEAMBATTLES:
+			Framework::SystemFramework->ProgramStages->Push( (Stage*)new MultipleControllerSelectStage() );
+			break;
+	}
 }
 
 void GameStage::Pause()
@@ -63,6 +75,7 @@ void GameStage::Event(FwEvent *e)
 void GameStage::Update()
 {
 	GameObject* gObj;
+	Plane* pObj;
 
 	int ObjIdx = 0;
 	ObjectsToRemove.clear();
@@ -77,9 +90,18 @@ void GameStage::Update()
 
 		if( Rules_HasGround && gObj->Position->Y >= (Framework::SystemFramework->GetDisplayHeight() / graphicsMultiplier) - 32 )
 		{
-			// Not strictly true, fix
-			gObj->ForRemoval = true;
-			ObjectsToRemove.push_back( ObjIdx );
+			pObj = dynamic_cast<Plane*>(*ptr);
+			if( pObj != 0 )
+			{
+				if( pObj->State != STATE_EXPLODING && pObj->State != STATE_EXPLODED )
+				{
+					pObj->LastHitBy = 0;
+					pObj->SetState( STATE_EXPLODING );
+				}
+			} else {
+				gObj->ForRemoval = true;
+				ObjectsToRemove.push_back( ObjIdx );
+			}
 		}
 		ObjIdx++;
 	}
@@ -90,12 +112,33 @@ void GameStage::Update()
 		ObjectsToRemove.pop_back();
 	}
 
-
 	while( (int)ObjectsToAdd.size() > 0 )
 	{
 		Objects.push_back( ObjectsToAdd.front() );
 		ObjectsToAdd.pop_front();
 	}
+
+	switch( Rules_GameMode )
+	{
+		case GAMEMODE_SURVIVAL:
+			// TODO: Check player is alive
+			// TODO: Spawn opponents
+			break;
+		case GAMEMODE_LASTMANSTANDING:
+			if( GetPlaneObjects()->size() == 1 )
+			{
+				// TODO: Push Winner
+				delete Framework::SystemFramework->ProgramStages->Pop();
+			} else if( GetPlaneObjects()->size() == 0 ) {
+				// TODO: Push HighScoring
+				delete Framework::SystemFramework->ProgramStages->Pop();
+			}
+			break;
+		case GAMEMODE_TEAMBATTLES:
+			// TODO: Find a list of active teams, if only one remaining, push highscoring
+			break;
+	}
+
 }
 
 void GameStage::Render()
@@ -145,6 +188,15 @@ void GameStage::AddGameObject( GameObject* NewObject )
 	ObjectsToAdd.push_back( NewObject );
 }
 
+void GameStage::AddPlayer( ALLEGRO_JOYSTICK* Controller )
+{
+	int Xpos = rand() % Framework::SystemFramework->GetDisplayWidth();
+	int Ypos = rand() % ((Framework::SystemFramework->GetDisplayHeight() / 4) * 3);
+
+	Plane* ply = new Plane( Controller, new Vector2( Xpos, Ypos ), PLANE_VELOCITY_MAX, 0.0 );
+	AddGameObject( ply );
+}
+
 std::list<Plane*>* GameStage::GetPlaneObjects()
 {
 	std::list<Plane*>* list = new std::list<Plane*>();
@@ -153,7 +205,10 @@ std::list<Plane*>* GameStage::GetPlaneObjects()
 		Plane* pObj = dynamic_cast<Plane*>(*ptr);
 		if( pObj != 0 )
 		{
-			list->push_back( pObj );
+			if( pObj->State != STATE_EXPLODED && pObj->State != STATE_EXPLODING )
+			{
+				list->push_back( pObj );
+			}
 		}
 	}
 	return list;
@@ -167,7 +222,10 @@ std::list<Bullet*>* GameStage::GetBulletObjects()
 		Bullet* bObj = dynamic_cast<Bullet*>(*ptr);
 		if( bObj != 0 )
 		{
-			list->push_back( bObj );
+			if( !bObj->ForRemoval )
+			{
+				list->push_back( bObj );
+			}
 		}
 	}
 	return list;

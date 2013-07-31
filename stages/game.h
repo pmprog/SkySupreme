@@ -9,6 +9,11 @@
 #include <vector>
 #include <list>
 
+#define GAMEMODE_FREEFLIGHT						0
+#define GAMEMODE_SURVIVAL							1
+#define GAMEMODE_LASTMANSTANDING			2
+#define GAMEMODE_TEAMBATTLES					3
+
 class GameStage : public Stage
 {
   private:
@@ -19,12 +24,13 @@ class GameStage : public Stage
 	public:
 		int graphicsMultiplier;
 
+		int Rules_GameMode;
 		bool Rules_PlaneToPlaneCollisions;
 		bool Rules_BulletToBulletCollisions;
 		bool Rules_FriendlyFire;
 		bool Rules_HasGround;
 
-		GameStage();
+		GameStage( int Mode );
 
     // Stage control
     virtual void Begin();
@@ -38,6 +44,7 @@ class GameStage : public Stage
 
 		ALLEGRO_BITMAP* GetGameScaledImage();
 		void AddGameObject( GameObject* NewObject );
+		void AddPlayer( ALLEGRO_JOYSTICK* Controller );
 
 		std::list<Plane*>* GetPlaneObjects();
 		std::list<Bullet*>* GetBulletObjects();

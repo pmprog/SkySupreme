@@ -26,18 +26,19 @@ class Plane : public GameObject
 		bool HasShot;
 		int LastSmokeFrame;
 
-		void SetState( int NewState );
-
 	public:
 		int Team;
 		bool Flipped;
 		int Health;
 		int State;
+		Plane* LastHitBy;
+		int Score;
 
 		// Individual aids, but can turn all on for AI mode :)
 		bool Controller_Assistance_AutoFlip;
 		bool Controller_Assistance_AutoFire;
 		bool Controller_Assistance_AutoFly;
+		bool Controller_Assistance_NoStall;
 		bool Controller_Keyboard;
 		ALLEGRO_JOYSTICK* Controller_Joystick;
 
@@ -47,5 +48,6 @@ class Plane : public GameObject
 		virtual void Update();
 		virtual void Render();
 
+		void SetState( int NewState );
 		void ProcessFlyingAI();
 };

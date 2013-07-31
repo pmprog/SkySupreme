@@ -213,6 +213,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\stages\freeflightcontrollerselect.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stages\game.cpp"
 				>
 			</File>
@@ -237,6 +241,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\stages\multicontrollerselect.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\managers\networkmanager.cpp"
 				>
 			</File>
@@ -258,6 +266,10 @@
 			</File>
 			<File
 				RelativePath=".\framework\stagestack.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\stages\survivalcontrollerselect.cpp"
 				>
 			</File>
 			<File
@@ -311,6 +323,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\stages\freeflightcontrollerselect.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stages\game.h"
 				>
 			</File>
@@ -332,6 +348,10 @@
 			</File>
 			<File
 				RelativePath=".\stages\menu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stages\multicontrollerselect.h"
 				>
 			</File>
 			<File
@@ -360,6 +380,10 @@
 			</File>
 			<File
 				RelativePath=".\framework\stagestack.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stages\survivalcontrollerselect.h"
 				>
 			</File>
 			<File

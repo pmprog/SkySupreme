@@ -48,32 +48,6 @@ bool Vector2::operator!=(Vector2 A)
   return (this->X != A.X || this->Y != A.Y);
 }
 
-/*
-Vector2& Vector2::operator+(Vector2 A)
-{
-  Vector2 r( this->X + A.X, this->Y + A.Y );
-  return r;
-}
-
-Vector2& Vector2::operator-(Vector2 A)
-{
-  Vector2 r( this->X - A.X, this->Y - A.Y );
-  return r;
-}
-
-Vector2& Vector2::operator*(double A)
-{
-  Vector2 r( this->X * A, this->Y * A );
-  return r;
-}
-
-Vector2& Vector2::operator/(double A)
-{
-  Vector2 r( this->X / A, this->Y / A );
-  return r;
-}
-*/
-
 void Vector2::Add(Vector2* Point)
 {
   X += Point->X;
@@ -90,4 +64,9 @@ double Vector2::AngleTo( Vector2* CheckPoint )
 {
   double r = atan2( CheckPoint->Y - Y, CheckPoint->X - X ) * 180.0 / M_PI;
   return r;
+}
+
+double Vector2::DistanceTo( Vector2* CheckPoint )
+{
+	return sqrt( pow(CheckPoint->X - X, 2.0) + pow(CheckPoint->Y - Y, 2.0) );
 }

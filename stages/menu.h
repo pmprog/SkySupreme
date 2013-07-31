@@ -1,5 +1,10 @@
 
+#pragma once
+
 #include "../framework/framework.h"
+#include "../objects/cloud.h"
+
+#define MENU_CLOUD_COUNT	20
 
 class MenuStage : public Stage
 {
@@ -8,6 +13,12 @@ class MenuStage : public Stage
 		ALLEGRO_COLOR OptionGlow[6];
 		int OptionGlowIndex;
 		int OptionGlowDelay;
+		std::list<Cloud*> BackgroundClouds;
+		ALLEGRO_BITMAP* tileSet;
+		int tileMultiplier;
+
+		bool WasJoyUp;
+		bool WasJoyDown;
 
 		void ProcessMenuOption();
 

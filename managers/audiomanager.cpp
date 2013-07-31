@@ -51,6 +51,11 @@ ALLEGRO_SAMPLE* AudioManager::GetSoundFX(std::string Filename)
 	fc->Path = new std::string(Filename);
 	fc->Reference = al_load_sample( Filename.c_str() );
 	fc->LastAccess = al_get_time();
+	if( fc->Reference == 0 )
+	{
+		delete fc;
+		return 0;
+	}
 	SfxCached.push_back( fc );
 
 	return (ALLEGRO_SAMPLE*)fc->Reference;
@@ -81,6 +86,11 @@ ALLEGRO_AUDIO_STREAM* AudioManager::GetMusic(std::string Filename)
 	fc->Path = new std::string(Filename);
 	fc->Reference = al_load_audio_stream( Filename.c_str(), 4, 2048 );
 	fc->LastAccess = al_get_time();
+	if( fc->Reference == 0 )
+	{
+		delete fc;
+		return 0;
+	}
 	MusicCached.push_back( fc );
 
 	return (ALLEGRO_AUDIO_STREAM*)fc->Reference;

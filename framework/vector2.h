@@ -22,16 +22,11 @@ class Vector2
 
     bool operator==(Vector2 A);
     bool operator!=(Vector2 A);
-    /*
-    Vector2& operator+(Vector2 A);
-    Vector2& operator-(Vector2 A);
-    Vector2& operator*(double A);
-    Vector2& operator/(double A);
-    */
 
     void Add(Vector2* Point);
     void Multiply(double Multiplier);
     double AngleTo( Vector2* CheckPoint );
+		double DistanceTo( Vector2* CheckPoint );
 
 
 };
