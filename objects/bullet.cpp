@@ -17,7 +17,7 @@ void Bullet::Update()
 	{
 		GameObject* gObj = (GameObject*)(*ptr);
 		Plane* pObj = (Plane*)(*ptr);
-		if( pObj != Owner )
+		if( pObj != Owner && (Game->Rules_FriendlyFire || pObj->Team != ((Plane*)Owner)->Team) )
 		{
 			if( pObj->State == STATE_FLYING || pObj->State == STATE_STALLED || pObj->State == STATE_SHOOT )
 			{
@@ -25,6 +25,7 @@ void Bullet::Update()
 				 {
 					 pObj->SetState( STATE_HIT );
 					 pObj->LastHitBy = (Plane*)Owner;
+					 ((Plane*)Owner)->Score++;
 					 ForRemoval = true;
 					 break;
 				 }

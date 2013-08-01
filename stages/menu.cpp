@@ -1,6 +1,7 @@
 
 #include "menu.h"
 #include "game.h"
+#include "multiplayermode.h"
 
 MenuStage::MenuStage()
 {
@@ -204,7 +205,7 @@ void MenuStage::ProcessMenuOption()
 			Framework::SystemFramework->ProgramStages->Push( new GameStage( GAMEMODE_SURVIVAL ) );
 			break;
 		case 2:
-			//Framework::SystemFramework->ProgramStages->Push( new GameStage( GAMEMODE_LASTMANSTANDING ) );
+			Framework::SystemFramework->ProgramStages->Push( new MultiplayerModeStage() );
 			break;
 		case 3:
 			//Framework::SystemFramework->ProgramStages->Push( new GameStage( GAMEMODE_TEAMBATTLES ) );

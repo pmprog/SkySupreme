@@ -3,11 +3,12 @@
 
 #include "../framework/framework.h"
 
-class MultipleControllerSelectStage : public Stage
+class MultiplayerModeStage : public Stage
 {
 	private:
-		void AddPlayer( ALLEGRO_JOYSTICK* joystick );
+		int Selected;
 
+		void StartGameMode( int Mode );
 	public:
     // Stage control
     virtual void Begin();

@@ -50,7 +50,7 @@ Plane::Plane( ALLEGRO_JOYSTICK* Controller, Vector2* StartPosition, double Start
 
 void Plane::Event( FwEvent* e )
 {
-	if( State == STATE_STALLED || State == STATE_EXPLODED || State == STATE_EXPLODING )
+	if( State == STATE_STALLED || State == STATE_EXPLODED || State == STATE_EXPLODING || State == STATE_HIT )
 	{
 		return;
 	}
@@ -137,21 +137,13 @@ void Plane::Event( FwEvent* e )
 		}
 	}
 
-
-	if( Controller_Assistance_AutoFire )
-	{
-	}
-
-	if( Controller_Assistance_AutoFly )
-	{
-		ProcessFlyingAI();
-	}
-
 }
 
 void Plane::Update()
 {
 	GameObject::Update();
+
+	ProcessFlyingAI();
 
 	Velocity += sin(Angle * (M_PI / 180.0)) / (Angle >= 180.0 ? 20.0 : 15.0);
 
@@ -178,7 +170,7 @@ void Plane::Update()
 		Velocity = 1.0;
 	}
 
-	if( Velocity <= 0.0 )
+	if( Velocity <= 0.0 && State != STATE_EXPLODED && State != STATE_EXPLODING )
 	{
 		Velocity = 0.0;
 		if( State != STATE_STALLED )
@@ -305,9 +297,9 @@ void Plane::SetState( int NewState )
 		Velocity = 0.0;
 		if( LastHitBy != 0 )
 		{
-			LastHitBy->Score++;
+			LastHitBy->Score += 2;	// + Got 1 point for the hit = 3 points for a killing shot
 		} else {
-			Score--;
+			Score -= 5;
 		}
 	}
 	State = NewState;
@@ -316,4 +308,80 @@ void Plane::SetState( int NewState )
 
 void Plane::ProcessFlyingAI()
 {
+	if( State == STATE_STALLED || State == STATE_EXPLODED || State == STATE_EXPLODING || State == STATE_HIT )
+	{
+		return;
+	}
+
+	std::list<Plane*>* gamePlanes = Game->GetPlaneObjects();
+	Plane* targetPlayer = 0;
+	double angleTo;
+
+	if( Controller_Assistance_AutoFly || Controller_Assistance_AutoFire )
+	{
+		for( std::list<Plane*>::const_iterator p = gamePlanes->begin(); p != gamePlanes->end(); p++ )
+		{
+			Plane* player = (Plane*)*p;
+			if( player != this )
+			{
+				angleTo = Position->AngleTo( player->Position );
+
+				// TODO: Fix for 360 angle overlaps
+				if( Controller_Assistance_AutoFire && angleTo <= Angle + 9.0 && angleTo >= Angle - 9.0 && (State == STATE_FLYING || State == STATE_FLIPPING) )
+				{
+					HasShot = false;
+					SetState( STATE_SHOOT );
+				}
+
+				if( Controller_Assistance_AutoFly )
+				{
+					if( CanTargetPlayer( player ) && rand() % 3 == 0 )
+					{
+						targetPlayer = player;
+					}
+				}
+
+			}
+		}
+	}
+
+	if( targetPlayer != 0 )
+	{
+		// Aim at player
+		// TODO: Fix for 360 angle overlaps
+		angleTo = Position->AngleTo( targetPlayer->Position );
+		if( angleTo < Angle )
+		{
+			RotateLeft = true;
+		} else {
+			RotateLeft = false;
+		}
+		if( angleTo > Angle )
+		{
+			RotateRight = true;
+		} else {
+			RotateRight = false;
+		}
+	}
+
+}
+
+bool Plane::CanTargetPlayer( Plane* Target )
+{
+	switch( Game->Rules_GameMode )
+	{
+		case GAMEMODE_SURVIVAL:
+			if( !Target->Controller_Keyboard && Target->Controller_Joystick == 0 )
+			{
+				return false;
+			}
+			break;
+		case GAMEMODE_TEAMBATTLES:
+			if( Target->Team == Team )
+			{
+				return false;
+			}
+			break;
+	}
+	return true;
 }

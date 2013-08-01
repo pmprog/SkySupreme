@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;DELAYBOOTUP"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -213,10 +213,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stages\freeflightcontrollerselect.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\stages\game.cpp"
 				>
 			</File>
@@ -242,6 +238,10 @@
 			</File>
 			<File
 				RelativePath=".\stages\multicontrollerselect.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\stages\multiplayermode.cpp"
 				>
 			</File>
 			<File
@@ -323,10 +323,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stages\freeflightcontrollerselect.h"
-				>
-			</File>
-			<File
 				RelativePath=".\stages\game.h"
 				>
 			</File>
@@ -352,6 +348,10 @@
 			</File>
 			<File
 				RelativePath=".\stages\multicontrollerselect.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stages\multiplayermode.h"
 				>
 			</File>
 			<File

@@ -14,6 +14,8 @@
 #define GAMEMODE_LASTMANSTANDING			2
 #define GAMEMODE_TEAMBATTLES					3
 
+#define SURVIVAL_INTERVALS						40
+
 class GameStage : public Stage
 {
   private:
@@ -21,10 +23,22 @@ class GameStage : public Stage
 		std::list<int> ObjectsToRemove;
 		std::list<GameObject*> ObjectsToAdd;
 
+		int SurvivalDelay;
+		int SurvivalTimer;
+		int SurvivalTotalTimer;
+		int SurvivalIndex;
+		static int SurvivalArrivals[SURVIVAL_INTERVALS];
+
+		void UpdateByRules();
+		void UpdateSurvival();
+
+		void RenderSurvival();
+
 	public:
 		int graphicsMultiplier;
 
 		int Rules_GameMode;
+		bool Rules_GameStarted;
 		bool Rules_PlaneToPlaneCollisions;
 		bool Rules_BulletToBulletCollisions;
 		bool Rules_FriendlyFire;
@@ -44,7 +58,7 @@ class GameStage : public Stage
 
 		ALLEGRO_BITMAP* GetGameScaledImage();
 		void AddGameObject( GameObject* NewObject );
-		void AddPlayer( ALLEGRO_JOYSTICK* Controller );
+		Plane* AddPlayer( ALLEGRO_JOYSTICK* Controller );
 
 		std::list<Plane*>* GetPlaneObjects();
 		std::list<Bullet*>* GetBulletObjects();

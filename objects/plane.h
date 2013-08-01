@@ -26,6 +26,8 @@ class Plane : public GameObject
 		bool HasShot;
 		int LastSmokeFrame;
 
+		bool CanTargetPlayer( Plane* Target );
+
 	public:
 		int Team;
 		bool Flipped;
