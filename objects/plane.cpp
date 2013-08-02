@@ -269,11 +269,11 @@ void Plane::Render()
 
 	if( State == STATE_FLIPPING )
 	{
-		tileX += 36 * Game->graphicsMultiplier;
+		tileX += 48 * Game->graphicsMultiplier;
 	}
 
-	ALLEGRO_BITMAP* tmp = al_create_sub_bitmap( tileset, tileX, tileY, 36 * Game->graphicsMultiplier, 32 * Game->graphicsMultiplier );
-	al_draw_rotated_bitmap( tmp, 18 * Game->graphicsMultiplier, 16 * Game->graphicsMultiplier, Position->X * Game->graphicsMultiplier, Position->Y * Game->graphicsMultiplier, Angle * (M_PI / 180), (Flipped ? ALLEGRO_FLIP_VERTICAL : 0) );
+	ALLEGRO_BITMAP* tmp = al_create_sub_bitmap( tileset, tileX, tileY, 48 * Game->graphicsMultiplier, 32 * Game->graphicsMultiplier );
+	al_draw_rotated_bitmap( tmp, 32 * Game->graphicsMultiplier, 16 * Game->graphicsMultiplier, Position->X * Game->graphicsMultiplier, Position->Y * Game->graphicsMultiplier, Angle * (M_PI / 180), (Flipped ? ALLEGRO_FLIP_VERTICAL : 0) );
 	al_destroy_bitmap( tmp );
 }
 

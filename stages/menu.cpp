@@ -20,22 +20,11 @@ MenuStage::MenuStage()
 	OptionGlow[5] = OptionGlow[1];
 
 	tileMultiplier = Framework::SystemFramework->Settings->GetQuickIntegerValue( "Visual.GraphicScale" );
-	switch( tileMultiplier )
+	if( tileMultiplier > 4 )
 	{
-		case 2:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetScale2xImage( "resource/tileset.png" );
-			break;
-		case 3:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetScale3xImage( "resource/tileset.png" );
-			break;
-		case 4:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetScale4xImage( "resource/tileset.png" );
-			break;
-		default:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetImage( "resource/tileset.png" );
-			tileMultiplier = 1;
-			break;
+		tileMultiplier = 4;
 	}
+	tileSet = GameStage::GetGameImageAtScale( tileMultiplier );
 
 	for( int i = 0; i < MENU_CLOUD_COUNT; i++ )
 	{
@@ -159,21 +148,23 @@ void MenuStage::Render()
 	
 	ALLEGRO_BITMAP* titleImg = Framework::SystemFramework->GetImageManager()->GetImage( "resource/title.png" );
 
-
 	al_clear_to_color( al_map_rgb( 92, 220, 218 ) ); // al_map_rgb( 43, 169, 168 ) );
 
+	GameStage::GetGameImageAtScale( tileMultiplier );
 	for( std::list<Cloud*>::iterator c = BackgroundClouds.begin(); c != BackgroundClouds.end(); c++ )
 	{
 		((Cloud*)*c)->Render();
 	}
 
+	double scaler = 1.0;
 	if( al_get_bitmap_width( titleImg ) > Framework::SystemFramework->GetDisplayWidth() )
 	{
-		double scaler = (double)Framework::SystemFramework->GetDisplayWidth() / (double)al_get_bitmap_width( titleImg );
-		al_draw_scaled_bitmap( titleImg, 0, 0, al_get_bitmap_width( titleImg ), al_get_bitmap_height( titleImg ), 0, 4, Framework::SystemFramework->GetDisplayWidth(), al_get_bitmap_height( titleImg ) * scaler, 0 );
+		scaler = (double)Framework::SystemFramework->GetDisplayWidth() / (double)al_get_bitmap_width( titleImg );
 	} else {
-		al_draw_bitmap( titleImg, (Framework::SystemFramework->GetDisplayWidth() / 2) - (al_get_bitmap_width( titleImg ) / 2), 8, 0 );
+		//al_draw_bitmap( titleImg, (Framework::SystemFramework->GetDisplayWidth() / 2) - (al_get_bitmap_width( titleImg ) / 2), 8, 0 );
+		scaler = (double)((Framework::SystemFramework->GetDisplayHeight() / 3.0) / (double)al_get_bitmap_height( titleImg ));
 	}
+	al_draw_scaled_bitmap( titleImg, 0, 0, al_get_bitmap_width( titleImg ), al_get_bitmap_height( titleImg ), (Framework::SystemFramework->GetDisplayWidth() / 2) - ((al_get_bitmap_width( titleImg ) * scaler) / 2), 4, al_get_bitmap_width( titleImg ) * scaler, al_get_bitmap_height( titleImg ) * scaler, 0 );
 
 	ALLEGRO_FONT* menuFont = Framework::SystemFramework->GetFontManager()->GetFont( "resource/falsepos.ttf", Framework::SystemFramework->GetDisplayHeight() / 12, 0 );
 	ALLEGRO_COLOR menuSelected = OptionGlow[OptionGlowIndex];

@@ -35,6 +35,7 @@ class GameStage : public Stage
 		void RenderSurvival();
 
 	public:
+
 		int graphicsMultiplier;
 
 		int Rules_GameMode;
@@ -63,4 +64,5 @@ class GameStage : public Stage
 		std::list<Plane*>* GetPlaneObjects();
 		std::list<Bullet*>* GetBulletObjects();
 
+		static ALLEGRO_BITMAP* GetGameImageAtScale( int Scale );
 };

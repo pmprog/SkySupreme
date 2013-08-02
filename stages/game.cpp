@@ -3,8 +3,8 @@
 #include "survivalcontrollerselect.h"
 #include "multicontrollerselect.h"
 
-int GameStage::SurvivalArrivals[SURVIVAL_INTERVALS] = { 5, 10, 10, 10, 10, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 3 };
-//int GameStage::SurvivalArrivals[SURVIVAL_INTERVALS] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 3 };
+//int GameStage::SurvivalArrivals[SURVIVAL_INTERVALS] = { 5, 10, 10, 10, 10, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 3 };
+int GameStage::SurvivalArrivals[SURVIVAL_INTERVALS] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 3 };
 
 GameStage::GameStage( int Mode )
 {
@@ -231,7 +231,7 @@ void GameStage::UpdateSurvival()
 
 void GameStage::Render()
 {
-	al_clear_to_color( al_map_rgb( 92, 220, 218 ) ); // al_map_rgb( 43, 169, 168 ) );
+	al_clear_to_color( al_map_rgb( 194, 217, 254 ) ); // al_map_rgb( 43, 169, 168 ) );
 
 	if( Rules_HasGround )
 	{
@@ -299,24 +299,11 @@ void GameStage::RenderSurvival()
 
 ALLEGRO_BITMAP* GameStage::GetGameScaledImage()
 {
-	ALLEGRO_BITMAP* tileSet;
-	switch( (int)graphicsMultiplier )
+	if( graphicsMultiplier > 4 )
 	{
-		case 2:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetScale2xImage( "resource/tileset.png" );
-			break;
-		case 3:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetScale3xImage( "resource/tileset.png" );
-			break;
-		case 4:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetScale4xImage( "resource/tileset.png" );
-			break;
-		default:
-			tileSet = Framework::SystemFramework->GetImageManager()->GetImage( "resource/tileset.png" );
-			graphicsMultiplier = 1;
-			break;
+		graphicsMultiplier = 4;
 	}
-	return tileSet;
+	return GetGameImageAtScale( graphicsMultiplier );
 }
 
 void GameStage::AddGameObject( GameObject* NewObject )
@@ -368,3 +355,23 @@ std::list<Bullet*>* GameStage::GetBulletObjects()
 	return list;
 }
 
+ALLEGRO_BITMAP* GameStage::GetGameImageAtScale( int Scale )
+{
+	ALLEGRO_BITMAP* tileSet;
+	switch( (int)Scale )
+	{
+		case 2:
+			tileSet = Framework::SystemFramework->GetImageManager()->GetScale2xImage( "resource/tileset.png" );
+			break;
+		case 3:
+			tileSet = Framework::SystemFramework->GetImageManager()->GetScale3xImage( "resource/tileset.png" );
+			break;
+		case 4:
+			tileSet = Framework::SystemFramework->GetImageManager()->GetScale4xImage( "resource/tileset.png" );
+			break;
+		default:
+			tileSet = Framework::SystemFramework->GetImageManager()->GetImage( "resource/tileset.png" );
+			break;
+	}
+	return tileSet;
+}
