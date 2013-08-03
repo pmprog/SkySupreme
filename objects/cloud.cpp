@@ -5,7 +5,6 @@
 Cloud::Cloud( Vector2* StartPosition, double StartVelocity, double StartAngle ) : Particle( -1, StartPosition, StartVelocity, StartAngle )
 {
 	CloudStyle = rand() % 2;
-	Tileset = 0;
 }
 
 void Cloud::Update()
@@ -55,14 +54,13 @@ void Cloud::Render()
 	ALLEGRO_BITMAP* tset;
 	int gMul;
 
-	if( Tileset == 0 )
+	if( Game == 0 )
 	{
-		tset = Game->GetGameScaledImage();
-		gMul = Game->graphicsMultiplier;
-	} else {
-		tset = Tileset;
 		gMul = TileMultiplier;
+	} else {
+		gMul = Game->graphicsMultiplier;
 	}
+	tset = Game->GetGameImageAtScale( gMul );
 
 	switch( CloudStyle )
 	{
@@ -75,8 +73,7 @@ void Cloud::Render()
 	}
 }
 
-void Cloud::SetTileSetImage( ALLEGRO_BITMAP* TilesetImage, int ScreenMultiplier )
+void Cloud::SetTileScale( int ScreenMultiplier )
 {
-	Tileset = TilesetImage;
 	TileMultiplier = ScreenMultiplier;
 }

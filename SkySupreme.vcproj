@@ -241,6 +241,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\stages\multiplayerhighscore.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stages\multiplayermode.cpp"
 				>
 			</File>
@@ -348,6 +352,10 @@
 			</File>
 			<File
 				RelativePath=".\stages\multicontrollerselect.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stages\multiplayerhighscore.h"
 				>
 			</File>
 			<File

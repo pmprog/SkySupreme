@@ -64,5 +64,7 @@ class GameStage : public Stage
 		std::list<Plane*>* GetPlaneObjects();
 		std::list<Bullet*>* GetBulletObjects();
 
+		std::list<Plane*>* GetAllPlaneObjects();
+
 		static ALLEGRO_BITMAP* GetGameImageAtScale( int Scale );
 };

@@ -2,9 +2,10 @@
 #include "game.h"
 #include "survivalcontrollerselect.h"
 #include "multicontrollerselect.h"
+#include "multiplayerhighscore.h"
 
-//int GameStage::SurvivalArrivals[SURVIVAL_INTERVALS] = { 5, 10, 10, 10, 10, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 3 };
-int GameStage::SurvivalArrivals[SURVIVAL_INTERVALS] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 3 };
+int GameStage::SurvivalArrivals[SURVIVAL_INTERVALS] = { 5, 10, 10, 10, 10, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 3 };
+//int GameStage::SurvivalArrivals[SURVIVAL_INTERVALS] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 3 };
 
 GameStage::GameStage( int Mode )
 {
@@ -124,13 +125,19 @@ void GameStage::Update()
 		ObjectsToAdd.pop_front();
 	}
 
-	UpdateByRules();
+	// Only process game rules if we're the active stage (ie, highscores will just update planes
+	if( Framework::SystemFramework->ProgramStages->Current() == this )
+	{
+		UpdateByRules();
+	}
 
 }
 
 void GameStage::UpdateByRules()
 {
 	bool PlayerStillAlive = false;
+	std::list<Plane*>* PlanesList;
+	std::list<int> TeamsAlive;
 
 	if( Rules_GameStarted )
 	{
@@ -153,7 +160,7 @@ void GameStage::UpdateByRules()
 					{
 						if( p->Controller_Keyboard || p->Controller_Joystick != 0 )
 						{
-							PlayerStillAlive = true;
+							PlayerStillAlive = (p->State != STATE_EXPLODED && p->State != STATE_EXPLODING);
 							break;
 						}
 					}
@@ -163,26 +170,53 @@ void GameStage::UpdateByRules()
 					// TODO: Push Score
 					delete Framework::SystemFramework->ProgramStages->Pop();
 				} else {
-					// TODO: Spawn opponents
 					UpdateSurvival();
 				}
 				break;
 
 
 			case GAMEMODE_LASTMANSTANDING:
-				if( GetPlaneObjects()->size() == 1 )
+				PlanesList = GetPlaneObjects();
+				if( PlanesList->size() == 1 )
 				{
-					// TODO: Push Winner
-					delete Framework::SystemFramework->ProgramStages->Pop();
-				} else if( GetPlaneObjects()->size() == 0 ) {
-					// TODO: Push HighScoring
-					delete Framework::SystemFramework->ProgramStages->Pop();
+					PlanesList->front()->Score += 5;
+				}
+				if( PlanesList->size() <= 1 )
+				{
+					Framework::SystemFramework->ProgramStages->Push( (Stage*)new MultiplayerHighScoreStage() );
 				}
 				break;
 
 
 			case GAMEMODE_TEAMBATTLES:
-				// TODO: Find a list of active teams, if only one remaining, push highscoring
+				PlanesList = GetPlaneObjects();
+				if( PlanesList->size() == 0 ) {
+					Framework::SystemFramework->ProgramStages->Push( (Stage*)new MultiplayerHighScoreStage() );
+				} else {
+
+					for( std::list<Plane*>::iterator p = PlanesList->begin(); p != PlanesList->end(); p++ )
+					{
+						Plane* pl = (Plane*)(*p);
+
+						bool foundTeam = false;
+						for( std::list<int>::iterator i = TeamsAlive.begin(); i != TeamsAlive.end(); i++ )
+						{
+							if( (*i) == pl->Team )
+							{
+								foundTeam = true;
+								break;
+							}
+						}
+						if( !foundTeam )
+						{
+							TeamsAlive.push_back( pl->Team );
+						}
+					}
+					if( TeamsAlive.size() == 1 )
+					{
+						Framework::SystemFramework->ProgramStages->Push( (Stage*)new MultiplayerHighScoreStage() );
+					}
+				}
 				break;
 		}
 	}
@@ -374,4 +408,18 @@ ALLEGRO_BITMAP* GameStage::GetGameImageAtScale( int Scale )
 			break;
 	}
 	return tileSet;
+}
+
+std::list<Plane*>* GameStage::GetAllPlaneObjects()
+{
+	std::list<Plane*>* list = new std::list<Plane*>();
+	for( std::vector<GameObject*>::iterator ptr = Objects.begin(); ptr != Objects.end(); ptr++ )
+	{
+		Plane* pObj = dynamic_cast<Plane*>(*ptr);
+		if( pObj != 0 )
+		{
+			list->push_back( pObj );
+		}
+	}
+	return list;
 }

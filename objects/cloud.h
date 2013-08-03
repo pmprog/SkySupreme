@@ -7,7 +7,6 @@ class Cloud : public Particle
 {
 	private:
 		int CloudStyle;
-		ALLEGRO_BITMAP* Tileset;
 		int TileMultiplier;
 
 	public:
@@ -16,6 +15,6 @@ class Cloud : public Particle
 		virtual void Update();
 		virtual void Render();
 
-		void SetTileSetImage( ALLEGRO_BITMAP* TilesetImage, int ScreenMultiplier );
+		void SetTileScale( int ScreenMultiplier );
 
 };

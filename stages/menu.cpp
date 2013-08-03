@@ -29,7 +29,7 @@ MenuStage::MenuStage()
 	for( int i = 0; i < MENU_CLOUD_COUNT; i++ )
 	{
 		Cloud* c = new Cloud(new Vector2( rand() % Framework::SystemFramework->GetDisplayWidth(), rand() % Framework::SystemFramework->GetDisplayHeight() ), (float)(rand() % 80) / 10, 180.0 );
-		c->SetTileSetImage( tileSet, tileMultiplier );
+		c->SetTileScale( tileMultiplier );
 		BackgroundClouds.push_back( c );
 	}
 
@@ -156,14 +156,7 @@ void MenuStage::Render()
 		((Cloud*)*c)->Render();
 	}
 
-	double scaler = 1.0;
-	if( al_get_bitmap_width( titleImg ) > Framework::SystemFramework->GetDisplayWidth() )
-	{
-		scaler = (double)Framework::SystemFramework->GetDisplayWidth() / (double)al_get_bitmap_width( titleImg );
-	} else {
-		//al_draw_bitmap( titleImg, (Framework::SystemFramework->GetDisplayWidth() / 2) - (al_get_bitmap_width( titleImg ) / 2), 8, 0 );
-		scaler = (double)((Framework::SystemFramework->GetDisplayHeight() / 3.0) / (double)al_get_bitmap_height( titleImg ));
-	}
+	double scaler = min( (double)((Framework::SystemFramework->GetDisplayHeight() / 3.0) / (double)al_get_bitmap_height( titleImg )), (double)Framework::SystemFramework->GetDisplayWidth() / (double)al_get_bitmap_width( titleImg ));
 	al_draw_scaled_bitmap( titleImg, 0, 0, al_get_bitmap_width( titleImg ), al_get_bitmap_height( titleImg ), (Framework::SystemFramework->GetDisplayWidth() / 2) - ((al_get_bitmap_width( titleImg ) * scaler) / 2), 4, al_get_bitmap_width( titleImg ) * scaler, al_get_bitmap_height( titleImg ) * scaler, 0 );
 
 	ALLEGRO_FONT* menuFont = Framework::SystemFramework->GetFontManager()->GetFont( "resource/falsepos.ttf", Framework::SystemFramework->GetDisplayHeight() / 12, 0 );

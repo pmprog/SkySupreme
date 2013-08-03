@@ -3,11 +3,8 @@
 
 #include "../framework/framework.h"
 
-class FreeFlightControllerSelectStage : public Stage
+class MultiplayerHighScoreStage : public Stage
 {
-	private:
-		void AddPlayer( ALLEGRO_JOYSTICK* joystick );
-
 	public:
     // Stage control
     virtual void Begin();

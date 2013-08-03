@@ -264,7 +264,7 @@ void Plane::Render()
 	}
 
 	ALLEGRO_BITMAP* tileset = Game->GetGameScaledImage();
-	int tileY = (Team * 32) * Game->graphicsMultiplier;
+	int tileY = (Team * 48) * Game->graphicsMultiplier;
 	int tileX = 144 * Game->graphicsMultiplier;
 
 	if( State == STATE_FLIPPING )
@@ -272,8 +272,8 @@ void Plane::Render()
 		tileX += 48 * Game->graphicsMultiplier;
 	}
 
-	ALLEGRO_BITMAP* tmp = al_create_sub_bitmap( tileset, tileX, tileY, 48 * Game->graphicsMultiplier, 32 * Game->graphicsMultiplier );
-	al_draw_rotated_bitmap( tmp, 32 * Game->graphicsMultiplier, 16 * Game->graphicsMultiplier, Position->X * Game->graphicsMultiplier, Position->Y * Game->graphicsMultiplier, Angle * (M_PI / 180), (Flipped ? ALLEGRO_FLIP_VERTICAL : 0) );
+	ALLEGRO_BITMAP* tmp = al_create_sub_bitmap( tileset, tileX, tileY, 48 * Game->graphicsMultiplier, 48 * Game->graphicsMultiplier );
+	al_draw_rotated_bitmap( tmp, 24 * Game->graphicsMultiplier, 24 * Game->graphicsMultiplier, Position->X * Game->graphicsMultiplier, Position->Y * Game->graphicsMultiplier, Angle * (M_PI / 180), (Flipped ? ALLEGRO_FLIP_VERTICAL : 0) );
 	al_destroy_bitmap( tmp );
 }
 
