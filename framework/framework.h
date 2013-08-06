@@ -41,6 +41,7 @@ class Framework
     LanguageManager* languageMgr;
 
     ALLEGRO_AUDIO_STREAM* musicStream;
+		std::string musicFilename;
 
   public:
     static Framework* SystemFramework;

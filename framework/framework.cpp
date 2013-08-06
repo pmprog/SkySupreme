@@ -201,13 +201,20 @@ void Framework::ProcessEvents()
       return;
     }
     ProgramStages->Current()->Update();
-    imageMgr->Update();
-    fontMgr->Update();
-    audioMgr->Update();
     downloadMgr->Update();
     networkMgr->Update();
     framesToProcess--;
   }
+
+	// Not bothered if these update every frame, only cache clearing
+  imageMgr->Update();
+  fontMgr->Update();
+	if( musicFilename != "" )
+	{
+		audioMgr->GetMusic( musicFilename );	// Prevent uncaching of current music
+	}
+  audioMgr->Update();
+
 
 #ifdef WRITE_LOG
   printf( "Framework: ProcessEvents.Render\n" );
@@ -292,6 +299,7 @@ void Framework::PlayMusic( std::string Filename, ALLEGRO_PLAYMODE Mode )
 		musicStream = audioMgr->GetMusic( Filename );
 		if( musicStream != 0 )
     {
+			musicFilename = Filename;
       al_set_audio_stream_playmode( musicStream, Mode );
       al_attach_audio_stream_to_mixer( musicStream, mixer );
       al_set_audio_stream_playing( musicStream, true );
@@ -309,6 +317,7 @@ void Framework::StopMusic()
 	{
 		al_set_audio_stream_playing( musicStream, false );
 	}
+	musicFilename = "";
 }
 
 void Framework::SaveSettings()

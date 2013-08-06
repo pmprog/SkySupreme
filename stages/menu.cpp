@@ -176,6 +176,13 @@ void MenuStage::Render()
 	al_draw_text( menuFont, ( OptionSelected == 4 ? menuSelected : menuNormal ), 20, Ypos, 0, "Settings" );
 	Ypos += Lsiz;
 	al_draw_text( menuFont, ( OptionSelected == 5 ? menuSelected : menuNormal ), 20, Ypos, 0, "Quit" );
+
+	ALLEGRO_FONT* pmprogFont = Framework::SystemFramework->GetFontManager()->GetFont( "resource/forte.ttf", Framework::SystemFramework->GetDisplayHeight() / 20, 0 );
+	Lsiz = al_get_font_line_height( pmprogFont );
+	int Wsiz = al_get_text_width( pmprogFont, "(c) Polymath Programming" );
+	al_draw_text( pmprogFont, menuNormal, Framework::SystemFramework->GetDisplayWidth() - Wsiz - 4, Framework::SystemFramework->GetDisplayHeight() - (Lsiz*2) - 4, 0, "(c) Polymath Programming" );
+	Wsiz = al_get_text_width( pmprogFont, "http://www.pmprog.co.uk" );
+	al_draw_text( pmprogFont, menuNormal, Framework::SystemFramework->GetDisplayWidth() - Wsiz - 4, Framework::SystemFramework->GetDisplayHeight() - Lsiz - 4, 0, "http://www.pmprog.co.uk" );
 }
 
 void MenuStage::ProcessMenuOption()

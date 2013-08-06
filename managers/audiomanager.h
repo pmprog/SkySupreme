@@ -14,6 +14,7 @@ typedef struct SoundCache
 	std::string* Path;
 	double LastAccess;
 	void* Reference;
+	bool Playing;
 } SoundCache;
 
 

@@ -80,7 +80,7 @@ void Plane::Event( FwEvent* e )
 				case ALLEGRO_KEY_PGUP:
 #endif
 				case ALLEGRO_KEY_X:
-					if( State != STATE_SHOOT )
+					if( State != STATE_SHOOT && State != STATE_FLIPPING )
 					{
 						SetState( STATE_FLIPPING );
 					}
