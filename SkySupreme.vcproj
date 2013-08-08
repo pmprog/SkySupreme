@@ -281,6 +281,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\stages\survivalgameover.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\framework\vector2.cpp"
 				>
 			</File>
@@ -400,6 +404,10 @@
 			</File>
 			<File
 				RelativePath=".\stages\survivalcontrollerselect.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stages\survivalgameover.h"
 				>
 			</File>
 			<File

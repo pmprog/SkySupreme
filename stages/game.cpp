@@ -3,6 +3,7 @@
 #include "survivalcontrollerselect.h"
 #include "multicontrollerselect.h"
 #include "multiplayerhighscore.h"
+#include "survivalgameover.h"
 
 int GameStage::SurvivalArrivals[SURVIVAL_INTERVALS] = { 5, 10, 10, 10, 10, 9, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 3 };
 //int GameStage::SurvivalArrivals[SURVIVAL_INTERVALS] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 8, 8, 8, 8, 8, 7, 7, 7, 7, 7, 7, 7, 6, 6, 6, 6, 6, 6, 5, 5, 5, 5, 5, 5, 4, 4, 4, 4, 3 };
@@ -167,8 +168,7 @@ void GameStage::UpdateByRules()
 				}
 				if( !PlayerStillAlive )
 				{
-					// TODO: Push Score
-					delete Framework::SystemFramework->ProgramStages->Pop();
+					Framework::SystemFramework->ProgramStages->Push( (Stage*)new SurvivalGameOverStage() );
 				} else {
 					UpdateSurvival();
 				}

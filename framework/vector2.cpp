@@ -63,6 +63,14 @@ void Vector2::Multiply(double Multiplier)
 double Vector2::AngleTo( Vector2* CheckPoint )
 {
   double r = atan2( CheckPoint->Y - Y, CheckPoint->X - X ) * 180.0 / M_PI;
+	while( r >= 360.0 )
+	{
+		r -= 360.0;
+	}
+	while( r < 0.0 )
+	{
+		r += 360.0;
+	}
   return r;
 }
 

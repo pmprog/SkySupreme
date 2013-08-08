@@ -2,6 +2,11 @@
 #include "multiplayerhighscore.h"
 #include "game.h"
 
+MultiplayerHighScoreStage::MultiplayerHighScoreStage()
+{
+	StageTime = 0;
+}
+
 void MultiplayerHighScoreStage::Begin()
 {
 }
@@ -22,16 +27,25 @@ void MultiplayerHighScoreStage::Event(FwEvent *e)
 {
 	if( e->Type == EVENT_KEY_DOWN )
 	{
-		if( e->Data.Keyboard.keycode == ALLEGRO_KEY_ENTER || e->Data.Keyboard.keycode == ALLEGRO_KEY_ESCAPE )
+		if( e->Data.Keyboard.keycode == ALLEGRO_KEY_ENTER || e->Data.Keyboard.keycode == ALLEGRO_KEY_ESCAPE || StageTime >= MPHIGHSCORE_MINTIMEOUT )
 		{
 			delete Framework::SystemFramework->ProgramStages->Pop();
 			delete Framework::SystemFramework->ProgramStages->Pop();
 		}
 	}
+	if( e->Type == EVENT_JOYSTICK_BUTTON_DOWN && StageTime >= MPHIGHSCORE_MINTIMEOUT )
+	{
+		delete Framework::SystemFramework->ProgramStages->Pop();
+		delete Framework::SystemFramework->ProgramStages->Pop();
+	}
 }
 
 void MultiplayerHighScoreStage::Update()
 {
+	if( StageTime < MPHIGHSCORE_MINTIMEOUT )
+	{
+		StageTime++;
+	}
 	Framework::SystemFramework->ProgramStages->Previous( this )->Update();
 }
 

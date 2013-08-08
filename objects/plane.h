@@ -18,6 +18,8 @@
 #define PLANE_DAMAGE_SMOKE_SMALL	3
 #define PLANE_DAMAGE_SMOKE_LOTS		1
 
+#define PLANE_SHOOT_COOLDOWN			30
+
 class Plane : public GameObject
 {
 	private:
@@ -25,6 +27,7 @@ class Plane : public GameObject
 		bool RotateRight;
 		bool HasShot;
 		int LastSmokeFrame;
+		int ShootCooldown;
 
 		bool CanTargetPlayer( Plane* Target );
 

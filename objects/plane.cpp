@@ -4,6 +4,7 @@
 #include "bullet.h"
 #include "smokecloud.h"
 #include "explosion.h"
+#include "../framework/angle.h"
 
 Plane::Plane( ALLEGRO_JOYSTICK* Controller, Vector2* StartPosition, double StartVelocity, double StartAngle ) : GameObject( StartPosition )
 {
@@ -12,6 +13,7 @@ Plane::Plane( ALLEGRO_JOYSTICK* Controller, Vector2* StartPosition, double Start
 
 	Score = 0;
 	LastHitBy = 0;
+	ShootCooldown = 0;
 
 	LastSmokeFrame = 0;
 	Team = 0;
@@ -145,6 +147,11 @@ void Plane::Update()
 
 	ProcessFlyingAI();
 
+	if( ShootCooldown > 0 )
+	{
+		ShootCooldown--;
+	}
+
 	Velocity += sin(Angle * (M_PI / 180.0)) / (Angle >= 180.0 ? 20.0 : 15.0);
 
 	// Flip right way up
@@ -239,7 +246,7 @@ void Plane::Update()
 
 	if( State == STATE_EXPLODING )
 	{
-		Vector2* v = new Vector2( (float)(rand() % 8), 0.0 );
+		Vector2* v = new Vector2( (float)(rand() % 26), 0.0 );
 		v->RotateVector( (float)(rand() % 36000) / 100.0 );
 		v->Add( Position );
 		Game->AddGameObject( new Explosion( v ) );
@@ -302,6 +309,15 @@ void Plane::SetState( int NewState )
 			Score -= 5;
 		}
 	}
+	if( NewState == STATE_SHOOT )
+	{
+		if( ShootCooldown > 0 )
+		{
+			return;
+		} else {
+			ShootCooldown = PLANE_SHOOT_COOLDOWN;
+		}
+	}
 	State = NewState;
 	Animation_CurrentFrame = 0;
 }
@@ -348,20 +364,23 @@ void Plane::ProcessFlyingAI()
 	if( targetPlayer != 0 )
 	{
 		// Aim at player
-		// TODO: Fix for 360 angle overlaps
 		angleTo = Position->AngleTo( targetPlayer->Position );
-		if( angleTo < Angle )
+		FwAngle* tmpAng = new FwAngle( Angle );
+		if( tmpAng->ClockwiseShortestTo( angleTo ) )
 		{
-			RotateLeft = true;
-		} else {
 			RotateLeft = false;
-		}
-		if( angleTo > Angle )
-		{
 			RotateRight = true;
 		} else {
+			RotateLeft = true;
 			RotateRight = false;
 		}
+
+		if( Game->Rules_HasGround && Position->Y >= (Framework::SystemFramework->GetDisplayHeight() / Game->graphicsMultiplier) - 128 && tmpAng->ClockwiseShortestTo( 90.0 ) == RotateRight )
+		{
+			RotateLeft = !RotateLeft;
+			RotateRight = !RotateRight;
+		}
+		delete tmpAng;
 	}
 
 }

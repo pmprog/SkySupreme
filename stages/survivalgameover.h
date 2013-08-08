@@ -3,17 +3,16 @@
 
 #include "../framework/framework.h"
 
-#define MPHIGHSCORE_MINTIMEOUT			FRAMES_PER_SECOND * 5
+#define SRVLHIGHSCORE_MINTIMEOUT			FRAMES_PER_SECOND * 5
 
-class MultiplayerHighScoreStage : public Stage
+class SurvivalGameOverStage : public Stage
 {
 
 	private:
 		int StageTime;
 
 	public:
-		MultiplayerHighScoreStage();
-
+		SurvivalGameOverStage();
     // Stage control
     virtual void Begin();
     virtual void Pause();
@@ -22,4 +21,5 @@ class MultiplayerHighScoreStage : public Stage
     virtual void Event(FwEvent *e);
     virtual void Update();
     virtual void Render();
+
 };
