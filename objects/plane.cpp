@@ -74,7 +74,6 @@ void Plane::Event( FwEvent* e )
 				case ALLEGRO_KEY_HOME:
 #endif
 				case ALLEGRO_KEY_Z:
-					HasShot = false;
 					SetState( STATE_SHOOT );
 					break;
 #ifdef PANDORA
@@ -122,7 +121,6 @@ void Plane::Event( FwEvent* e )
 				{
 					case 0:
 					case 2:
-						HasShot = false;
 						SetState( STATE_SHOOT );
 						break;
 					case 1:
@@ -315,6 +313,7 @@ void Plane::SetState( int NewState )
 		{
 			return;
 		} else {
+			HasShot = false;
 			ShootCooldown = PLANE_SHOOT_COOLDOWN;
 		}
 	}
@@ -341,11 +340,11 @@ void Plane::ProcessFlyingAI()
 			if( player != this )
 			{
 				angleTo = Position->AngleTo( player->Position );
+				FwAngle* tmp = new FwAngle( angleTo );
 
 				// TODO: Fix for 360 angle overlaps
 				if( Controller_Assistance_AutoFire && angleTo <= Angle + 9.0 && angleTo >= Angle - 9.0 && (State == STATE_FLYING || State == STATE_FLIPPING) )
 				{
-					HasShot = false;
 					SetState( STATE_SHOOT );
 				}
 

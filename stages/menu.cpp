@@ -157,7 +157,7 @@ void MenuStage::Render()
 	
 	ALLEGRO_BITMAP* titleImg = Framework::SystemFramework->GetImageManager()->GetImage( "resource/title.png" );
 
-	al_clear_to_color( al_map_rgb( 92, 220, 218 ) ); // al_map_rgb( 43, 169, 168 ) );
+	al_clear_to_color( al_map_rgb( 194, 217, 254 ) ); // al_map_rgb( 43, 169, 168 ) );
 
 	GameStage::GetGameImageAtScale( tileMultiplier );
 	for( std::list<Cloud*>::iterator c = BackgroundClouds.begin(); c != BackgroundClouds.end(); c++ )

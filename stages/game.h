@@ -26,6 +26,7 @@ class GameStage : public Stage
 		std::list<int> ObjectsToRemove;
 		std::list<GameObject*> ObjectsToAdd;
 
+		Plane* SurvivalPlayer;
 		int SurvivalDelay;
 		int SurvivalTimer;
 		int SurvivalTotalTimer;

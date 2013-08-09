@@ -19,6 +19,7 @@ GameStage::GameStage( int Mode )
 	Rules_FriendlyFire = false;
 	Rules_HasGround = true;
 
+	SurvivalPlayer = 0;
 	SurvivalDelay = 0;
 	SurvivalTimer = 0;
 	SurvivalTotalTimer = 0;
@@ -271,6 +272,10 @@ void GameStage::UpdateSurvival()
 			{
 				SurvivalTimer = 0;
 				pObj = AddPlayer( (ALLEGRO_JOYSTICK*)-1 );
+				if( SurvivalPlayer != 0 )
+				{
+					SurvivalPlayer->Score++;
+				}
 				if( SurvivalIndex < SURVIVAL_INTERVALS - 1 )
 				{
 					SurvivalIndex++;
@@ -385,6 +390,12 @@ Plane* GameStage::AddPlayer( ALLEGRO_JOYSTICK* Controller )
 
 	Plane* ply = new Plane( Controller, new Vector2( Xpos, Ypos ), PLANE_VELOCITY_MAX, 0.0 );
 	AddGameObject( ply );
+
+	if( Controller != (ALLEGRO_JOYSTICK*)-1 )
+	{
+		SurvivalPlayer = ply;
+	}
+
 	return ply;
 }
 

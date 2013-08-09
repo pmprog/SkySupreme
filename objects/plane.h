@@ -18,7 +18,7 @@
 #define PLANE_DAMAGE_SMOKE_SMALL	3
 #define PLANE_DAMAGE_SMOKE_LOTS		1
 
-#define PLANE_SHOOT_COOLDOWN			30
+#define PLANE_SHOOT_COOLDOWN			40
 
 class Plane : public GameObject
 {
