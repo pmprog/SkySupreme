@@ -3,12 +3,10 @@
 
 #include "../framework/framework.h"
 
-class MultiplayerModeStage : public Stage
+class SettingsStage : public Stage
 {
 	private:
 		int Selected;
-
-		void StartGameMode( int Mode );
 
 	public:
     // Stage control

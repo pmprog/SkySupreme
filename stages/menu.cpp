@@ -2,6 +2,8 @@
 #include "menu.h"
 #include "game.h"
 #include "multiplayermode.h"
+#include "networklobby.h"
+#include "settings.h"
 
 MenuStage::MenuStage()
 {
@@ -33,7 +35,11 @@ MenuStage::MenuStage()
 		BackgroundClouds.push_back( c );
 	}
 
-	Framework::SystemFramework->PlayMusic( "resource/506187_dogfight.ogg", ALLEGRO_PLAYMODE_LOOP );
+	MusicOn = Framework::SystemFramework->Settings->GetQuickBooleanValue( "Audio.Music" );
+	if( MusicOn )
+	{
+		Framework::SystemFramework->PlayMusic( "resource/506187_dogfight.ogg", ALLEGRO_PLAYMODE_LOOP );
+	}
 }
 
 void MenuStage::Begin()
@@ -52,7 +58,10 @@ void MenuStage::Resume()
 
 void MenuStage::Finish()
 {
-	Framework::SystemFramework->StopMusic();
+	if( MusicOn )
+	{
+		Framework::SystemFramework->StopMusic();
+	}
 }
 
 void MenuStage::Event(FwEvent *e)
@@ -199,9 +208,10 @@ void MenuStage::ProcessMenuOption()
 			Framework::SystemFramework->ProgramStages->Push( new MultiplayerModeStage() );
 			break;
 		case 3:
-			//Framework::SystemFramework->ProgramStages->Push( new GameStage( GAMEMODE_TEAMBATTLES ) );
+			Framework::SystemFramework->ProgramStages->Push( new NetworkLobbyStage() );
 			break;
 		case 4:
+			Framework::SystemFramework->ProgramStages->Push( new SettingsStage() );
 			break;
 		case 5:
 			delete Framework::SystemFramework->ProgramStages->Pop();

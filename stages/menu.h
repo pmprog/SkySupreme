@@ -17,6 +17,8 @@ class MenuStage : public Stage
 		ALLEGRO_BITMAP* tileSet;
 		int tileMultiplier;
 
+		bool MusicOn;
+
 		bool WasJoyUp;
 		bool WasJoyDown;
 

@@ -75,4 +75,12 @@ void BootUp::InitialiseSettings()
   {
     Framework::SystemFramework->Settings->SetIntegerValue( "Visual.GraphicScale", 1 );
   }
+	if( !Framework::SystemFramework->Settings->KeyExists( "Audio.Music" ) )
+  {
+    Framework::SystemFramework->Settings->SetBooleanValue( "Audio.Music", true );
+  }
+	if( !Framework::SystemFramework->Settings->KeyExists( "Audio.SoundFX" ) )
+  {
+    Framework::SystemFramework->Settings->SetBooleanValue( "Audio.SoundFX", true );
+  }
 }

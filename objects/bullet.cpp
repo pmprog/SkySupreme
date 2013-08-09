@@ -5,6 +5,7 @@
 Bullet::Bullet( GameObject* Shooter ) : Particle( BULLET_LIFE, Shooter->Position, BULLET_VELOCITY, Shooter->Angle )
 {
 	Owner = Shooter;
+	Zorder = Shooter->Zorder;
 }
 
 void Bullet::Update()

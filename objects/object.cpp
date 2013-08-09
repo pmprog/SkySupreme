@@ -14,6 +14,7 @@ GameObject::GameObject( double StartX, double StartY )
 	Angle = 0;
 	ForRemoval = false;
 	Position = new Vector2( StartX, StartY );
+	Zorder = rand() % 20;
 }
 
 GameObject::GameObject( Vector2* StartPosition )
@@ -26,6 +27,7 @@ GameObject::GameObject( Vector2* StartPosition )
 	Angle = 0;
 	ForRemoval = false;
 	Position = new Vector2( StartPosition->X, StartPosition->Y );
+	Zorder = rand() % 20;
 }
 
 void GameObject::Update()
@@ -68,4 +70,9 @@ void GameObject::Update()
 
 	Position->Y += sin(Angle * (M_PI / 180.0)) * (Velocity / 10);
 
+}
+
+bool GameObject::CompareZ( GameObject* first, GameObject* second )
+{
+	return (first->Zorder < second->Zorder);
 }

@@ -8,6 +8,7 @@
 #include "../objects/smokecloud.h"
 #include <vector>
 #include <list>
+#include <algorithm>
 
 #define GAMEMODE_FREEFLIGHT						0
 #define GAMEMODE_SURVIVAL							1
@@ -15,6 +16,8 @@
 #define GAMEMODE_TEAMBATTLES					3
 
 #define SURVIVAL_INTERVALS						40
+
+#define FREEFLIGHT_CLOUD_COUNT				10
 
 class GameStage : public Stage
 {
@@ -33,6 +36,8 @@ class GameStage : public Stage
 		void UpdateSurvival();
 
 		void RenderSurvival();
+
+		void SortObjectsList();
 
 	public:
 

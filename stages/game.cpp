@@ -32,11 +32,37 @@ void GameStage::Begin()
 	switch( Rules_GameMode )
 	{
 		case GAMEMODE_SURVIVAL:
+			Rules_PlaneToPlaneCollisions = false;
+			Rules_BulletToBulletCollisions = false;
+			Rules_FriendlyFire = true;
+			Rules_HasGround = true;
 			Framework::SystemFramework->ProgramStages->Push( (Stage*)new SurvivalControllerSelectStage() );
 			break;
 		case GAMEMODE_FREEFLIGHT:
+			Rules_PlaneToPlaneCollisions = false;
+			Rules_BulletToBulletCollisions = false;
+			Rules_FriendlyFire = false;
+			Rules_HasGround = false;
+			for( int i = 0; i < FREEFLIGHT_CLOUD_COUNT; i++ )
+			{
+				Cloud* c = new Cloud(new Vector2( rand() % Framework::SystemFramework->GetDisplayWidth(), rand() % Framework::SystemFramework->GetDisplayHeight() ), (float)(rand() % 80) / 10, 180.0 );
+				c->SetTileScale( graphicsMultiplier );
+				AddGameObject( c );
+			}
+			Framework::SystemFramework->ProgramStages->Push( (Stage*)new MultipleControllerSelectStage() );
+			break;
 		case GAMEMODE_LASTMANSTANDING:
+			Rules_PlaneToPlaneCollisions = false;
+			Rules_BulletToBulletCollisions = false;
+			Rules_FriendlyFire = true;
+			Rules_HasGround = true;
+			Framework::SystemFramework->ProgramStages->Push( (Stage*)new MultipleControllerSelectStage() );
+			break;
 		case GAMEMODE_TEAMBATTLES:
+			Rules_PlaneToPlaneCollisions = false;
+			Rules_BulletToBulletCollisions = false;
+			Rules_FriendlyFire = false;
+			Rules_HasGround = true;
 			Framework::SystemFramework->ProgramStages->Push( (Stage*)new MultipleControllerSelectStage() );
 			break;
 	}
@@ -120,11 +146,18 @@ void GameStage::Update()
 		ObjectsToRemove.pop_back();
 	}
 
+	bool AddedObjects = false;
 	while( (int)ObjectsToAdd.size() > 0 )
 	{
 		Objects.push_back( ObjectsToAdd.front() );
 		ObjectsToAdd.pop_front();
+		AddedObjects = true;
 	}
+	if( AddedObjects )
+	{
+		SortObjectsList();
+	}
+
 
 	// Only process game rules if we're the active stage (ie, highscores will just update planes
 	if( Framework::SystemFramework->ProgramStages->Current() == this )
@@ -422,4 +455,9 @@ std::list<Plane*>* GameStage::GetAllPlaneObjects()
 		}
 	}
 	return list;
+}
+
+void GameStage::SortObjectsList()
+{
+	std::sort( Objects.begin(), Objects.end(), GameObject::CompareZ );
 }

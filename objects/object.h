@@ -16,6 +16,8 @@ class GameObject
 	public:
 		static GameStage* Game;
 
+		int Zorder;
+
 		GameObject* Owner;
 
 		int Animation_CurrentFrame;
@@ -32,6 +34,8 @@ class GameObject
 
 		virtual void Update();
 		virtual void Render() = 0;
+
+		static bool CompareZ( GameObject* first, GameObject* second );
 
 };
 

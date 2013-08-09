@@ -3,7 +3,7 @@
 
 #include "../framework/framework.h"
 
-class MultiplayerModeStage : public Stage
+class NetworkLobbyStage : public Stage
 {
 	private:
 		int Selected;

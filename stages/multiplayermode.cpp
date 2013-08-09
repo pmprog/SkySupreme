@@ -64,7 +64,7 @@ void MultiplayerModeStage::Render()
 	Framework::SystemFramework->ProgramStages->Previous( this )->Render();
 	al_draw_filled_rectangle( 0, 0, Framework::SystemFramework->GetDisplayWidth(), Framework::SystemFramework->GetDisplayHeight(), al_map_rgba( 0, 0, 0, 128 ) );
 
-	int boxW = Framework::SystemFramework->GetDisplayWidth() / 3;
+	int boxW = Framework::SystemFramework->GetDisplayWidth() / 2.5;
 	int boxH = Framework::SystemFramework->GetDisplayHeight() / 4;
 
 	al_draw_filled_rounded_rectangle( (Framework::SystemFramework->GetDisplayWidth() / 2) - boxW - 3, (Framework::SystemFramework->GetDisplayHeight() / 2) - (boxH / 2), (Framework::SystemFramework->GetDisplayWidth() / 2) - 3, (Framework::SystemFramework->GetDisplayHeight() / 2) + (boxH / 2), 8, 8, (Selected == 0 ? al_map_rgb( 255, 255, 255 ) : al_map_rgb( 0, 0, 0 )) );

@@ -253,6 +253,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\stages\networklobby.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\managers\networkmanager.cpp"
 				>
 			</File>
@@ -266,6 +270,10 @@
 			</File>
 			<File
 				RelativePath=".\objects\plane.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\stages\settings.cpp"
 				>
 			</File>
 			<File
@@ -375,6 +383,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\stages\networklobby.h"
+				>
+			</File>
+			<File
 				RelativePath=".\managers\networkmanager.h"
 				>
 			</File>
@@ -388,6 +400,10 @@
 			</File>
 			<File
 				RelativePath=".\objects\plane.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stages\settings.h"
 				>
 			</File>
 			<File

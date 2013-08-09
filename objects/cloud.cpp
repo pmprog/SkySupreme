@@ -35,19 +35,11 @@ void Cloud::Update()
 	}
 
 	Position->X += cos(Angle * (M_PI / 180.0)) * (Velocity / 10);
-	if( Position->X * gMul >= Framework::SystemFramework->GetDisplayWidth() )
+	if( Position->X < -64 )
 	{
-		Position->X -= Framework::SystemFramework->GetDisplayWidth() / gMul;
-	} else if( Position->X < 0 ) {
-		Position->X += Framework::SystemFramework->GetDisplayWidth() / gMul;
+		Position->X += (Framework::SystemFramework->GetDisplayWidth() / gMul) + 128;
 	}
 
-	if( Position->Y * gMul >= Framework::SystemFramework->GetDisplayHeight() )
-	{
-		Position->Y -= Framework::SystemFramework->GetDisplayHeight() / gMul;
-	} else if( Position->Y < 0 ) {
-		Position->Y += Framework::SystemFramework->GetDisplayHeight() / gMul;
-	}
 }
 
 void Cloud::Render()
