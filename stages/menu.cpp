@@ -165,7 +165,7 @@ void MenuStage::Render()
 		((Cloud*)*c)->Render();
 	}
 
-	double scaler = min( (double)((Framework::SystemFramework->GetDisplayHeight() / 3.0) / (double)al_get_bitmap_height( titleImg )), (double)Framework::SystemFramework->GetDisplayWidth() / (double)al_get_bitmap_width( titleImg ));
+	double scaler = min( (double)((Framework::SystemFramework->GetDisplayHeight() / 2) / (double)al_get_bitmap_height( titleImg )), (double)Framework::SystemFramework->GetDisplayWidth() / (double)al_get_bitmap_width( titleImg ));
 	al_draw_scaled_bitmap( titleImg, 0, 0, al_get_bitmap_width( titleImg ), al_get_bitmap_height( titleImg ), (Framework::SystemFramework->GetDisplayWidth() / 2) - ((al_get_bitmap_width( titleImg ) * scaler) / 2), 4, al_get_bitmap_width( titleImg ) * scaler, al_get_bitmap_height( titleImg ) * scaler, 0 );
 
 	ALLEGRO_FONT* menuFont = Framework::SystemFramework->GetFontManager()->GetFont( "resource/falsepos.ttf", Framework::SystemFramework->GetDisplayHeight() / 16, 0 );

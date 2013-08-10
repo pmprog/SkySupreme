@@ -363,6 +363,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\framework\maths.h"
+				>
+			</File>
+			<File
 				RelativePath=".\framework\memory.h"
 				>
 			</File>

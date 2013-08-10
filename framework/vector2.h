@@ -1,12 +1,7 @@
 
 #pragma once
 
-#include <math.h>
-
-#ifndef M_PI
-#include "graphicslib.h"
-#define M_PI      ALLEGRO_PI
-#endif
+#include "maths.h"
 
 class Vector2
 {

@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include "maths.h"
+
 class FwAngle
 {
 	private:
