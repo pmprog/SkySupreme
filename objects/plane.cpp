@@ -314,7 +314,7 @@ void Plane::SetState( int NewState )
 			return;
 		} else {
 			HasShot = false;
-			ShootCooldown = PLANE_SHOOT_COOLDOWN;
+			ShootCooldown = PLANE_SHOOT_COOLDOWN + ( Controller_Assistance_AutoFire ? rand() % PLANE_SHOOT_AUTOBUFFER : 0 ) ;
 		}
 	}
 	State = NewState;
@@ -340,10 +340,9 @@ void Plane::ProcessFlyingAI()
 			if( player != this )
 			{
 				angleTo = Position->AngleTo( player->Position );
-				FwAngle* tmp = new FwAngle( angleTo );
+				FwAngle* tmp = new FwAngle( Angle );
 
-				// TODO: Fix for 360 angle overlaps
-				if( Controller_Assistance_AutoFire && angleTo <= Angle + 9.0 && angleTo >= Angle - 9.0 && (State == STATE_FLYING || State == STATE_FLIPPING) )
+				if( Controller_Assistance_AutoFire && tmp->ShortestAngleTo( angleTo ) <= 9.0 && (State == STATE_FLYING || State == STATE_FLIPPING) )
 				{
 					SetState( STATE_SHOOT );
 				}

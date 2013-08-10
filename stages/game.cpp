@@ -202,7 +202,7 @@ void GameStage::UpdateByRules()
 				}
 				if( !PlayerStillAlive )
 				{
-					Framework::SystemFramework->ProgramStages->Push( (Stage*)new SurvivalGameOverStage() );
+					Framework::SystemFramework->ProgramStages->Push( (Stage*)new SurvivalGameOverStage( SurvivalPlayer ) );
 				} else {
 					UpdateSurvival();
 				}

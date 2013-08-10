@@ -12,8 +12,8 @@ class FwAngle
 		double ToDegrees();
 		double ToRadians();
 
-		FwAngle* ShortestAngleTo( FwAngle* DestinationAngle );
-		FwAngle* ShortestAngleTo( double DestinationAngle );
+		double ShortestAngleTo( FwAngle* DestinationAngle );
+		double ShortestAngleTo( double DestinationAngle );
 		bool ClockwiseShortestTo( FwAngle* DestinationAngle );
 		bool ClockwiseShortestTo( double DestinationAngle );
 		void RotateShortestBy( FwAngle* DestinationAngle, double ByDegrees );

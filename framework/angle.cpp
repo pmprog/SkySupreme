@@ -66,13 +66,14 @@ void FwAngle::RotateShortestBy( double DestinationAngle, double ByDegrees )
 	}
 }
 
-FwAngle* FwAngle::ShortestAngleTo( FwAngle* DestinationAngle )
+double FwAngle::ShortestAngleTo( FwAngle* DestinationAngle )
 {
 	return ShortestAngleTo( DestinationAngle->ToDegrees() );
 }
 
-FwAngle* FwAngle::ShortestAngleTo( double DestinationAngle )
+double FwAngle::ShortestAngleTo( double DestinationAngle )
 {
 	double ang = min(abs(DestinationAngle - curAngle), abs(curAngle - DestinationAngle));
+	return ang;
 }
 
