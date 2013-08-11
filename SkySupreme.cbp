@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="SkySupreme" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug Win32">
+				<Option output="SkySupreme" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Debug Win32" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-W" />
+					<Add option="-g" />
+					<Add option="-O0" />
+					<Add option="-DPANDORA" />
+				</Compiler>
+				<Linker>
+					<Add library="allegro" />
+					<Add library="allegro_acodec" />
+					<Add library="allegro_audio" />
+					<Add library="allegro_color" />
+					<Add library="allegro_font" />
+					<Add library="allegro_image" />
+					<Add library="allegro_primitives" />
+					<Add library="allegro_ttf" />
+					<Add library="enet" />
+					<Add library="libcurl" />
+				</Linker>
+			</Target>
+			<Target title="Release Win32">
+				<Option output="SkySupreme" prefix_auto="1" extension_auto="1" />
+				<Option object_output="Release Win32" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-DWIN32" />
+					<Add option="-DNDEBUG" />
+					<Add option="-D_WINDOWS" />
+					<Add option="-W" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add library="allegro" />
+					<Add library="allegro_acodec" />
+					<Add library="allegro_audio" />
+					<Add library="allegro_color" />
+					<Add library="allegro_font" />
+					<Add library="allegro_image" />
+					<Add library="allegro_primitives" />
+					<Add library="allegro_ttf" />
+					<Add library="enet" />
+					<Add library="libcurl" />
+				</Linker>
+			</Target>
+		</Build>
+		<Unit filename="framework/angle.cpp" />
+		<Unit filename="framework/angle.h" />
+		<Unit filename="framework/configfile.cpp" />
+		<Unit filename="framework/configfile.h" />
+		<Unit filename="framework/event.cpp" />
+		<Unit filename="framework/event.h" />
+		<Unit filename="framework/framework.cpp" />
+		<Unit filename="framework/framework.h" />
+		<Unit filename="framework/graphicslib.h" />
+		<Unit filename="framework/maths.h" />
+		<Unit filename="framework/memory.cpp" />
+		<Unit filename="framework/memory.h" />
+		<Unit filename="framework/stage.h" />
+		<Unit filename="framework/stagestack.cpp" />
+		<Unit filename="framework/stagestack.h" />
+		<Unit filename="framework/vector2.cpp" />
+		<Unit filename="framework/vector2.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="managers/audiomanager.cpp" />
+		<Unit filename="managers/audiomanager.h" />
+		<Unit filename="managers/downloadmanager.cpp" />
+		<Unit filename="managers/downloadmanager.h" />
+		<Unit filename="managers/fontmanager.cpp" />
+		<Unit filename="managers/fontmanager.h" />
+		<Unit filename="managers/imagemanager.cpp" />
+		<Unit filename="managers/imagemanager.h" />
+		<Unit filename="managers/languagemanager.cpp" />
+		<Unit filename="managers/languagemanager.h" />
+		<Unit filename="managers/networkmanager.cpp" />
+		<Unit filename="managers/networkmanager.h" />
+		<Unit filename="objects/bullet.cpp" />
+		<Unit filename="objects/bullet.h" />
+		<Unit filename="objects/cloud.cpp" />
+		<Unit filename="objects/cloud.h" />
+		<Unit filename="objects/explosion.cpp" />
+		<Unit filename="objects/explosion.h" />
+		<Unit filename="objects/object.cpp" />
+		<Unit filename="objects/object.h" />
+		<Unit filename="objects/particle.cpp" />
+		<Unit filename="objects/particle.h" />
+		<Unit filename="objects/plane.cpp" />
+		<Unit filename="objects/plane.h" />
+		<Unit filename="objects/smokecloud.cpp" />
+		<Unit filename="objects/smokecloud.h" />
+		<Unit filename="stages/bootup.cpp" />
+		<Unit filename="stages/bootup.h" />
+		<Unit filename="stages/game.cpp" />
+		<Unit filename="stages/game.h" />
+		<Unit filename="stages/menu.cpp" />
+		<Unit filename="stages/menu.h" />
+		<Unit filename="stages/multicontrollerselect.cpp" />
+		<Unit filename="stages/multicontrollerselect.h" />
+		<Unit filename="stages/multiplayerhighscore.cpp" />
+		<Unit filename="stages/multiplayerhighscore.h" />
+		<Unit filename="stages/multiplayermode.cpp" />
+		<Unit filename="stages/multiplayermode.h" />
+		<Unit filename="stages/networklobby.cpp" />
+		<Unit filename="stages/networklobby.h" />
+		<Unit filename="stages/settings.cpp" />
+		<Unit filename="stages/settings.h" />
+		<Unit filename="stages/survivalcontrollerselect.cpp" />
+		<Unit filename="stages/survivalcontrollerselect.h" />
+		<Unit filename="stages/survivalgameover.cpp" />
+		<Unit filename="stages/survivalgameover.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

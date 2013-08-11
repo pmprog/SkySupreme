@@ -4,7 +4,7 @@
 
 Cloud::Cloud( Vector2* StartPosition, double StartVelocity, double StartAngle ) : Particle( -1, StartPosition, StartVelocity, StartAngle )
 {
-	CloudStyle = rand() % 3;
+	CloudStyle = rand() % 4;
 	Velocity *= (CloudStyle + 1);
 }
 
@@ -58,13 +58,16 @@ void Cloud::Render()
 	switch( CloudStyle )
 	{
 		case 0:
-			al_draw_bitmap_region( tset, 0, 192 * gMul, 128 * gMul, 64 * gMul, (Position->X - 64) * gMul, (Position->Y - 32) * gMul, 0 );
+			al_draw_bitmap_region( tset, 48 * gMul, 160 * gMul, 80 * gMul, 48 * gMul, (Position->X - 40) * gMul, (Position->Y - 24) * gMul, 0 );
 			break;
 		case 1:
-			al_draw_bitmap_region( tset, 96 * gMul, 32 * gMul, 48 * gMul, 32 * gMul, (Position->X - 24) * gMul, (Position->Y - 16) * gMul, 0 );
+			al_draw_bitmap_region( tset, 0, 208 * gMul, 128 * gMul, 64 * gMul, (Position->X - 64) * gMul, (Position->Y - 32) * gMul, 0 );
 			break;
 		case 2:
-			al_draw_bitmap_region( tset, 112 * gMul, 64 * gMul, 32 * gMul, 32 * gMul, (Position->X - 16) * gMul, (Position->Y - 16) * gMul, 0 );
+			al_draw_bitmap_region( tset, 0, 272 * gMul, 112 * gMul, 48 * gMul, (Position->X - 56) * gMul, (Position->Y - 24) * gMul, 0 );
+			break;
+		case 3:
+			al_draw_bitmap_region( tset, 0, 320 * gMul, 144 * gMul, 48 * gMul, (Position->X - 72) * gMul, (Position->Y - 24) * gMul, 0 );
 			break;
 	}
 }
