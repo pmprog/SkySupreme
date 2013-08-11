@@ -8,14 +8,12 @@
 #define M_PI      ALLEGRO_PI
 #endif
 
-#ifndef abs
+#ifndef WIN32
 inline int abs( int a )
 {
 	return ( a < 0 ? a * -1 : a );
 };
-#endif
 
-#ifndef min
 inline int min( int a, int b )
 {
 	return ( a <= b ? a : b );
