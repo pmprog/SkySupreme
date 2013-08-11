@@ -2,6 +2,13 @@
 #include "angle.h"
 #include "../framework/vector2.h"
 
+#ifndef WIN32
+inline int abs( int a )
+{
+	return ( a < 0 ? a * -1 : a );
+};
+#endif
+
 FwAngle::FwAngle( double StartAngle )
 {
 	curAngle = 0;
