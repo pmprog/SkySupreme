@@ -342,7 +342,7 @@ void Plane::ProcessFlyingAI()
 				angleTo = Position->AngleTo( player->Position );
 				FwAngle* tmp = new FwAngle( Angle );
 
-				if( Controller_Assistance_AutoFire && tmp->ShortestAngleTo( angleTo ) <= 9.0 && (State == STATE_FLYING || State == STATE_FLIPPING) )
+				if( Controller_Assistance_AutoFire && tmp->ShortestAngleTo( angleTo ) <= PLANE_SHOOT_AIMANGLE && (State == STATE_FLYING || State == STATE_FLIPPING) && ShootCooldown == 0 )
 				{
 					SetState( STATE_SHOOT );
 				}

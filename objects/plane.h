@@ -19,7 +19,8 @@
 #define PLANE_DAMAGE_SMOKE_LOTS		1
 
 #define PLANE_SHOOT_COOLDOWN			40
-#define PLANE_SHOOT_AUTOBUFFER		9
+#define PLANE_SHOOT_AUTOBUFFER		30
+#define PLANE_SHOOT_AIMANGLE			13.0
 
 class Plane : public GameObject
 {
