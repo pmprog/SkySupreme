@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PXML xmlns="http://openpandora.org/namespaces/PXML">
+  <package id="skysupreme.marqwatkin">
+    <author name="Marq Watkin" website="http://www.pmprog.co.uk" email="devhead@pmprog.co.uk"/>
+    <version major="1" minor="0" release="0" build="0"/>
+    <titles>
+      <title lang="en_US">Sky Supreme</title>
+    </titles>
+    <descriptions>
+      <description lang="en_US">Fancy yourself as a top aerial combat pilot? Prove your worth and show off your skills</description>
+    </descriptions>
+    <icon src="./resource/gameicon.png"/>
+  </package>
+  <application id="skysupreme.marqwatkin">
+    <exec command="./SkySupreme"/>
+    <author name="Marq Watkin" website="http://www.pmprog.co.uk" email="devhead@pmprog.co.uk"/>
+    <version major="1" minor="0" release="0" build="0"/>
+    <titles>
+      <title lang="en_US">Sky Supreme</title>
+    </titles>
+    <descriptions>
+      <description lang="en_US">Fancy yourself as a top aerial combat pilot? Prove your worth and show off your skills</description>
+    </descriptions>
+    <!--Extra block for compatibility with OS versions before HF6-->
+    <title lang="en_US">Sky Supreme</title>
+    <description lang="en_US">Fancy yourself as a top aerial combat pilot? Prove your worth and show off your skills</description>
+    <!--END Extra block-->
+    <icon src="./resource/gameicon.png"/>
+    <licenses>
+      <license name="CC BY NC-SA" url="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB" sourcecodeurl="https://github.com/pmprog/SkySupreme"/>
+    </licenses>
+    <icon src="./resource/gameicon.png"/>
+    <previewpics>
+      <pic src="./screens/screen2.png"/>
+      <pic src="./screens/screen1.png"/>
+    </previewpics>
+    <categories>
+      <category name="Game">
+        <subcategory name="ArcadeGame"/>
+      </category>
+    </categories>
+  </application>
+  <!--Created with the PXMLCreator of PNDTools v.0.7.0-->
+</PXML>
