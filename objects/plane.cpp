@@ -48,6 +48,12 @@ Plane::Plane( ALLEGRO_JOYSTICK* Controller, Vector2* StartPosition, double Start
 			Controller_Assistance_AutoFlip = true;
 		}
 	}
+
+	// Buff player in Survival
+	if( Game->Rules_GameMode == GAMEMODE_SURVIVAL && !Controller_Assistance_AutoFly )
+	{
+		Health *= 2;
+	}
 }
 
 void Plane::Event( FwEvent* e )

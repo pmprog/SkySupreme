@@ -6,6 +6,11 @@ Bullet::Bullet( GameObject* Shooter ) : Particle( BULLET_LIFE, Shooter->Position
 {
 	Owner = Shooter;
 	Zorder = Shooter->Zorder;
+	Angle += ((double)(rand() % (int)(BULLET_SPREAD * 10.0)) / 10.0) - (BULLET_SPREAD / 2.0);
+	Vector2* off = new Vector2( 16.0 * Game->graphicsMultiplier, 2.0 * Game->graphicsMultiplier );
+	off->RotateVector( Angle );
+	Position->Add( off );
+	delete off;
 }
 
 void Bullet::Update()

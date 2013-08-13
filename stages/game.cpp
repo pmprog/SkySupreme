@@ -389,6 +389,11 @@ Plane* GameStage::AddPlayer( ALLEGRO_JOYSTICK* Controller )
 	int Ypos = rand() % (((Framework::SystemFramework->GetDisplayHeight() / graphicsMultiplier) / 4) * 3);
 
 	Plane* ply = new Plane( Controller, new Vector2( Xpos, Ypos ), PLANE_VELOCITY_MAX, 0.0 );
+	if( rand() % 2 == 1 )
+	{
+		ply->Angle = 180.0;
+		ply->Flipped = true;
+	}
 	AddGameObject( ply );
 
 	if( Controller != (ALLEGRO_JOYSTICK*)-1 )
