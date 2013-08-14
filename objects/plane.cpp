@@ -21,8 +21,13 @@ Plane::Plane( ALLEGRO_JOYSTICK* Controller, Vector2* StartPosition, double Start
 	Health = PLANE_DAMAGE_MAX;
 	State = STATE_FLYING;
 
+	AIState = PLANE_AI_CRUISE;
+	AIStateTime = 0;
+
 	RotateLeft = false;
 	RotateRight = false;
+	ThrottleUp = false;
+	ThrottleDown = false;
 
 	Controller_Assistance_AutoFlip = false;
 	Controller_Assistance_AutoFire = false;
@@ -75,6 +80,12 @@ void Plane::Event( FwEvent* e )
 				case ALLEGRO_KEY_RIGHT:
 					RotateRight = true;
 					break;
+				case ALLEGRO_KEY_UP:
+					ThrottleUp = true;
+					break;
+				case ALLEGRO_KEY_DOWN:
+					ThrottleDown = true;
+					break;
 #ifdef PANDORA
 				case ALLEGRO_KEY_PGDN:
 				case ALLEGRO_KEY_HOME:
@@ -107,6 +118,12 @@ void Plane::Event( FwEvent* e )
 				case ALLEGRO_KEY_RIGHT:
 					RotateRight = false;
 					break;
+				case ALLEGRO_KEY_UP:
+					ThrottleUp = false;
+					break;
+				case ALLEGRO_KEY_DOWN:
+					ThrottleDown = false;
+					break;
 			}
 		}
 	}
@@ -120,6 +137,11 @@ void Plane::Event( FwEvent* e )
 				{
 					RotateLeft = (e->Data.Joystick.pos < 0.0);
 					RotateRight = (e->Data.Joystick.pos > 0.0);
+				}
+				if( e->Data.Joystick.axis == 1 )
+				{
+					ThrottleUp = (e->Data.Joystick.pos < 0.0);
+					ThrottleDown = (e->Data.Joystick.pos > 0.0);
 				}
 				break;
 			case EVENT_JOYSTICK_BUTTON_DOWN:
@@ -149,7 +171,14 @@ void Plane::Update()
 {
 	GameObject::Update();
 
-	ProcessFlyingAI();
+	if( Controller_Assistance_AutoFly )
+	{
+		ProcessFlyingAI();
+	}
+	if( Controller_Assistance_AutoFire )
+	{
+		ProcessShootingAI();
+	}
 
 	if( ShootCooldown > 0 )
 	{
@@ -157,6 +186,14 @@ void Plane::Update()
 	}
 
 	Velocity += sin(Angle * (M_PI / 180.0)) / (Angle >= 180.0 ? 20.0 : 15.0);
+	if( State == STATE_FLYING && ThrottleUp )
+	{
+		Velocity += 0.3;
+	}
+	if( State == STATE_FLYING && ThrottleDown && (Angle >= 130.0 || Angle <= 50.0) )
+	{
+		Velocity -= 0.3;
+	}
 
 	// Flip right way up
 	if( Controller_Assistance_AutoFlip && State == STATE_FLYING && (((Angle > 270.0 || Angle <= 90.0) && Flipped) || (Angle > 90.0 && Angle <= 270.0 && !Flipped)) )
@@ -186,8 +223,6 @@ void Plane::Update()
 		Velocity = 0.0;
 		if( State != STATE_STALLED )
 		{
-			RotateLeft = false;
-			RotateRight = false;
 			SetState( STATE_STALLED );
 		}
 	}
@@ -323,6 +358,13 @@ void Plane::SetState( int NewState )
 			ShootCooldown = PLANE_SHOOT_COOLDOWN + ( Controller_Assistance_AutoFire ? rand() % PLANE_SHOOT_AUTOBUFFER : 0 ) ;
 		}
 	}
+	if( NewState == STATE_STALLED )
+	{
+		ThrottleDown = false;
+		ThrottleUp = false;
+		RotateLeft = false;
+		RotateRight = false;
+	}
 	State = NewState;
 	Animation_CurrentFrame = 0;
 }
@@ -334,59 +376,111 @@ void Plane::ProcessFlyingAI()
 		return;
 	}
 
-	std::list<Plane*>* gamePlanes = Game->GetPlaneObjects();
+	AIStateTime--;
+	if( AIStateTime <= 0 )
+	{
+		AIState = rand() % PLANE_AI_MODES;
+		AIStateTime = (rand() % 60) + 10;
+	}
+
+	std::list<Plane*>* gamePlanes;
 	Plane* targetPlayer = 0;
 	double angleTo;
+	FwAngle* tmp;
 
-	if( Controller_Assistance_AutoFly || Controller_Assistance_AutoFire )
+	switch( AIState )
 	{
-		for( std::list<Plane*>::const_iterator p = gamePlanes->begin(); p != gamePlanes->end(); p++ )
-		{
-			Plane* player = (Plane*)*p;
-			if( player != this )
+		case PLANE_AI_TARGET:
+			gamePlanes = Game->GetPlaneObjects();
+			for( std::list<Plane*>::const_iterator p = gamePlanes->begin(); p != gamePlanes->end(); p++ )
 			{
-				angleTo = Position->AngleTo( player->Position );
-				FwAngle* tmp = new FwAngle( Angle );
-
-				if( Controller_Assistance_AutoFire && tmp->ShortestAngleTo( angleTo ) <= PLANE_SHOOT_AIMANGLE && (State == STATE_FLYING || State == STATE_FLIPPING) && ShootCooldown == 0 )
+				Plane* player = (Plane*)*p;
+				if( player != this )
 				{
-					SetState( STATE_SHOOT );
-				}
+					angleTo = Position->AngleTo( player->Position );
+					tmp = new FwAngle( Angle );
 
-				if( Controller_Assistance_AutoFly )
-				{
-					if( CanTargetPlayer( player ) && rand() % 3 == 0 )
+					if( Controller_Assistance_AutoFire && tmp->ShortestAngleTo( angleTo ) <= PLANE_SHOOT_AIMANGLE && (State == STATE_FLYING || State == STATE_FLIPPING) && ShootCooldown == 0 )
 					{
-						targetPlayer = player;
+						SetState( STATE_SHOOT );
 					}
+
+					if( Controller_Assistance_AutoFly )
+					{
+						if( CanTargetPlayer( player ) && rand() % 3 == 0 )
+						{
+							targetPlayer = player;
+						}
+					}
+
+					delete tmp;
+
 				}
-
 			}
-		}
+
+			if( targetPlayer != 0 )
+			{
+				// Aim at player
+				angleTo = Position->AngleTo( targetPlayer->Position );
+				FwAngle* tmpAng = new FwAngle( Angle );
+				RotateRight = tmpAng->ClockwiseShortestTo( angleTo );
+				RotateLeft = !RotateRight;
+
+				if( Game->Rules_HasGround && Position->Y >= (Framework::SystemFramework->GetDisplayHeight() / Game->graphicsMultiplier) - 128 && tmpAng->ClockwiseShortestTo( 90.0 ) == RotateRight )
+				{
+					RotateLeft = !RotateLeft;
+					RotateRight = !RotateRight;
+				}
+				delete tmpAng;
+			}
+			break;
+
+		case PLANE_AI_CRUISE:
+			tmp = new FwAngle( Angle );
+			angleTo = (Flipped ? 180.0 : 0.0) + ((double)(rand() % 9) - 4.5);
+			RotateRight = tmp->ClockwiseShortestTo( angleTo );
+			RotateLeft = !RotateRight;
+
+			if( State == STATE_FLYING && tmp->ShortestAngleTo( angleTo ) > 90.0 )
+			{
+				SetState( STATE_FLIPPING );
+			}
+			delete tmp;
+			break;
+
+		case PLANE_AI_EVADE:
+			tmp = new FwAngle( Angle );
+			RotateRight = tmp->ClockwiseShortestTo( (rand() % 260) + 100.0 );
+			RotateLeft = !RotateRight;
+			delete tmp;
+			break;
 	}
 
-	if( targetPlayer != 0 )
+}
+
+void Plane::ProcessShootingAI()
+{
+	std::list<Plane*>* gamePlanes;
+	Plane* targetPlayer = 0;
+	double angleTo;
+	FwAngle* tmp;
+
+	gamePlanes = Game->GetPlaneObjects();
+	for( std::list<Plane*>::const_iterator p = gamePlanes->begin(); p != gamePlanes->end(); p++ )
 	{
-		// Aim at player
-		angleTo = Position->AngleTo( targetPlayer->Position );
-		FwAngle* tmpAng = new FwAngle( Angle );
-		if( tmpAng->ClockwiseShortestTo( angleTo ) )
+		Plane* player = (Plane*)*p;
+		if( player != this && CanTargetPlayer( player ) )
 		{
-			RotateLeft = false;
-			RotateRight = true;
-		} else {
-			RotateLeft = true;
-			RotateRight = false;
-		}
+			angleTo = Position->AngleTo( player->Position );
+			tmp = new FwAngle( Angle );
+			if( Controller_Assistance_AutoFire && tmp->ShortestAngleTo( angleTo ) <= PLANE_SHOOT_AIMANGLE && (State == STATE_FLYING || State == STATE_FLIPPING) && ShootCooldown == 0 )
+			{
+				SetState( STATE_SHOOT );
+			}
+			delete tmp;
 
-		if( Game->Rules_HasGround && Position->Y >= (Framework::SystemFramework->GetDisplayHeight() / Game->graphicsMultiplier) - 128 && tmpAng->ClockwiseShortestTo( 90.0 ) == RotateRight )
-		{
-			RotateLeft = !RotateLeft;
-			RotateRight = !RotateRight;
 		}
-		delete tmpAng;
 	}
-
 }
 
 bool Plane::CanTargetPlayer( Plane* Target )

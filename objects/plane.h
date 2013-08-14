@@ -22,14 +22,24 @@
 #define PLANE_SHOOT_AUTOBUFFER		30
 #define PLANE_SHOOT_AIMANGLE			13.0
 
+#define PLANE_AI_TARGET						0
+#define PLANE_AI_CRUISE						1
+#define PLANE_AI_EVADE						2
+#define PLANE_AI_MODES						PLANE_AI_EVADE + 1
+
 class Plane : public GameObject
 {
 	private:
 		bool RotateLeft;
 		bool RotateRight;
+		bool ThrottleUp;
+		bool ThrottleDown;
 		bool HasShot;
 		int LastSmokeFrame;
 		int ShootCooldown;
+
+		int AIState;
+		int AIStateTime;
 
 		bool CanTargetPlayer( Plane* Target );
 
@@ -57,4 +67,5 @@ class Plane : public GameObject
 
 		void SetState( int NewState );
 		void ProcessFlyingAI();
+		void ProcessShootingAI();
 };

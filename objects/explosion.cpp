@@ -4,7 +4,7 @@
 
 Explosion::Explosion( Vector2* StartPosition ) : Particle( FRAMES_PER_SECOND / 2, StartPosition, 0.0, 0.0 )
 {
-	Animation_TicksPerFrame = FRAMES_PER_SECOND / 18;
+	Animation_TicksPerFrame = FRAMES_PER_SECOND / 16;
 }
 
 void Explosion::Update()

@@ -54,7 +54,7 @@ bool FwAngle::ClockwiseShortestTo( double DestinationAngle )
 	{
 		diff += 360.0;
 	}
-	return (diff < 180.0);
+	return (diff < 180.0 && diff > 0.0);
 }
 
 void FwAngle::RotateShortestBy( FwAngle* DestinationAngle, double ByDegrees )
