@@ -25,7 +25,7 @@
 #define PLANE_AI_TARGET						0
 #define PLANE_AI_CRUISE						1
 #define PLANE_AI_EVADE						2
-#define PLANE_AI_MODES						PLANE_AI_EVADE + 1
+#define PLANE_AI_MODES						PLANE_AI_CRUISE + 1 // PLANE_AI_EVADE + 1
 
 class Plane : public GameObject
 {
@@ -40,6 +40,9 @@ class Plane : public GameObject
 
 		int AIState;
 		int AIStateTime;
+
+		Plane* AITarget;
+		int AITargetTime;
 
 		bool CanTargetPlayer( Plane* Target );
 
