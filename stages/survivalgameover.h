@@ -5,6 +5,7 @@
 #include "../objects/plane.h"
 
 #define SRVLHIGHSCORE_MINTIMEOUT			FRAMES_PER_SECOND * 5
+#define SRVLHIGHSCORE_KEYTIMEIN				FRAMES_PER_SECOND * 1
 
 class SurvivalGameOverStage : public Stage
 {
@@ -15,6 +16,10 @@ class SurvivalGameOverStage : public Stage
 
 		int ActiveHighScore;
 		int ActiveHighScoreChar;
+		int CharSelect;
+
+		static std::string CharacterList;
+		static std::string LastName;
 
 	public:
 		SurvivalGameOverStage( Plane* Player );

@@ -21,7 +21,6 @@ Plane::Plane( ALLEGRO_JOYSTICK* Controller, Vector2* StartPosition, double Start
 	Health = PLANE_DAMAGE_MAX;
 	State = STATE_FLYING;
 
-	AIState = PLANE_AI_CRUISE;
 	AIStateTime = 0;
 
 	AITarget = 0;
@@ -201,7 +200,10 @@ void Plane::Update()
 	// Flip right way up
 	if( Controller_Assistance_AutoFlip && State == STATE_FLYING && (((Angle > 270.0 || Angle <= 90.0) && Flipped) || (Angle > 90.0 && Angle <= 270.0 && !Flipped)) )
 	{
-		SetState( STATE_FLIPPING );
+		if( rand() % 5 < 2 )
+		{
+			SetState( STATE_FLIPPING );
+		}
 	}
 
 	// Trying to ascend upside down
@@ -381,7 +383,6 @@ void Plane::ProcessFlyingAI()
 
 	std::list<Plane*>* gamePlanes;
 	double angleTo;
-	FwAngle* tmp;
 
 	// Target for a random time
 	if( AITargetTime > 0 )

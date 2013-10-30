@@ -12,7 +12,7 @@
 #define STATE_EXPLODED		6
 
 #define PLANE_VELOCITY_MAX				20.0
-#define PLANE_VELOCITY_STALLEXIT	10.0
+#define PLANE_VELOCITY_STALLEXIT	7.0
 
 #define PLANE_DAMAGE_MAX					8
 #define PLANE_DAMAGE_SMOKE_SMALL	3
@@ -21,11 +21,6 @@
 #define PLANE_SHOOT_COOLDOWN			40
 #define PLANE_SHOOT_AUTOBUFFER		30
 #define PLANE_SHOOT_AIMANGLE			13.0
-
-#define PLANE_AI_TARGET						0
-#define PLANE_AI_CRUISE						1
-#define PLANE_AI_EVADE						2
-#define PLANE_AI_MODES						PLANE_AI_CRUISE + 1 // PLANE_AI_EVADE + 1
 
 class Plane : public GameObject
 {
@@ -38,9 +33,7 @@ class Plane : public GameObject
 		int LastSmokeFrame;
 		int ShootCooldown;
 
-		int AIState;
 		int AIStateTime;
-
 		Plane* AITarget;
 		int AITargetTime;
 
