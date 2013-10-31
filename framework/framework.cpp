@@ -1,4 +1,3 @@
-
 #include "framework.h"
 #include "../stages/bootup.h"
 
@@ -73,40 +72,42 @@ Framework::Framework()
 
 Framework::~Framework()
 {
-
+#ifdef WRITE_LOG
+  printf( "Framework: Save Config\n" );
+#endif
   Settings->Save( "settings.cfg" );
 
 #ifdef WRITE_LOG
-  printf( "Framework: Shutdown\n" );
+  printf( "Framework: Shutdown Managers\n" );
 #endif
-
-  al_destroy_event_queue( eventQueue );
-  al_destroy_display( displaySurface );
-  al_destroy_mutex( extraEventsMutex );
-
   delete imageMgr;
   delete audioMgr;
   delete fontMgr;
   delete networkMgr;
   delete downloadMgr;
 
-  // Shutdown Allegro
-  if( mixer != 0 )
-  {
-    al_destroy_mixer( mixer );
-  }
-  if( voice != 0 )
-  {
-    al_destroy_voice( voice );
-  }
-
-	al_uninstall_keyboard();
-	al_uninstall_mouse();
+#ifdef WRITE_LOG
+  printf( "Framework: Shutdown Addons\n" );
+#endif
 	al_shutdown_primitives_addon();
 	al_shutdown_ttf_addon();
 	al_shutdown_image_addon();
 	al_shutdown_font_addon();
+
+#ifdef WRITE_LOG
+  printf( "Framework: Shutdown Allegro\n" );
+#endif
+	ShutdownDisplay();
+	ShutdownAudioSystem();
+  al_destroy_event_queue( eventQueue );
+  al_destroy_mutex( extraEventsMutex );
+	
+#ifdef WRITE_LOG
+  printf( "Framework: Uninstall Allegro\n" );
+#endif
 	al_uninstall_audio();
+	al_uninstall_keyboard();
+	al_uninstall_mouse();
   al_uninstall_joystick();
 }
 
