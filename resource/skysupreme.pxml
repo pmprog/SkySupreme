@@ -27,7 +27,7 @@
     <!--END Extra block-->
     <icon src="./resource/gameicon.png"/>
     <licenses>
-      <license name="CC BY NC-SA" url="http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB" sourcecodeurl="https://github.com/pmprog/SkySupreme"/>
+      <license name="MIT" url="https://github.com/pmprog/SkySupreme/blob/master/LICENSE" sourcecodeurl="https://github.com/pmprog/SkySupreme"/>
     </licenses>
     <icon src="./resource/gameicon.png"/>
     <previewpics>
