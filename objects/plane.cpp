@@ -1,4 +1,3 @@
-
 #include "plane.h"
 #include "../stages/game.h"
 #include "bullet.h"
@@ -82,22 +81,28 @@ void Plane::Event( FwEvent* e )
 				case ALLEGRO_KEY_RIGHT:
 					RotateRight = true;
 					break;
+#ifdef PANDORA
+				case ALLEGRO_KEY_RCTRL:
+#endif
 				case ALLEGRO_KEY_UP:
 					ThrottleUp = true;
 					break;
+#ifdef PANDORA
+				case ALLEGRO_KEY_RSHIFT:
+#endif
 				case ALLEGRO_KEY_DOWN:
 					ThrottleDown = true;
 					break;
 #ifdef PANDORA
+				case ALLEGRO_KEY_PGUP:
 				case ALLEGRO_KEY_PGDN:
-				case ALLEGRO_KEY_HOME:
 #endif
 				case ALLEGRO_KEY_Z:
 					SetState( STATE_SHOOT );
 					break;
 #ifdef PANDORA
+				case ALLEGRO_KEY_HOME:
 				case ALLEGRO_KEY_END:
-				case ALLEGRO_KEY_PGUP:
 #endif
 				case ALLEGRO_KEY_X:
 					if( State != STATE_SHOOT && State != STATE_FLIPPING )
@@ -120,9 +125,15 @@ void Plane::Event( FwEvent* e )
 				case ALLEGRO_KEY_RIGHT:
 					RotateRight = false;
 					break;
+#ifdef PANDORA
+				case ALLEGRO_KEY_RCTRL:
+#endif
 				case ALLEGRO_KEY_UP:
 					ThrottleUp = false;
 					break;
+#ifdef PANDORA
+				case ALLEGRO_KEY_RSHIFT:
+#endif
 				case ALLEGRO_KEY_DOWN:
 					ThrottleDown = false;
 					break;
